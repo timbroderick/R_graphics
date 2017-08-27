@@ -6,4 +6,4 @@ navbar:
     - text: "Introduction"
       href: index.html
     - text: "00_Navigation"
-      href: 00_Navigation.html
+      href: 00_navigation.html
