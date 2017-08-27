@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>04_basicLines</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making graphics with R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="00_Navigation.html">00_Navigation</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">04_basicLines</h1>
+
+</div>
+
+
+<p>With line charts, we’re going to introduce the idea of creating a space for the plot and then adding elements to it.</p>
+<p>You can see why with a basic line plot.</p>
+<p>But first we load the readr library and then the dataset.</p>
+<pre class="r"><code>library(readr)
+df &lt;- read_csv(&quot;dfCrime.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Year_Quarter = col_character(),
+##   year = col_integer(),
+##   quarter = col_character(),
+##   Total_CFS = col_integer(),
+##   Total_arrests = col_integer(),
+##   Total_RTR = col_integer(),
+##   SOF_only = col_integer(),
+##   UOF_only = col_integer(),
+##   Transitions = col_integer()
+## )</code></pre>
+<p>Now let’s use summary() to remind us of what the data is</p>
+<pre class="r"><code>summary(df)</code></pre>
+<pre><code>##  Year_Quarter            year        quarter            Total_CFS    
+##  Length:12          Min.   :2014   Length:12          Min.   :18178  
+##  Class :character   1st Qu.:2014   Class :character   1st Qu.:19663  
+##  Mode  :character   Median :2015   Mode  :character   Median :21544  
+##                     Mean   :2015                      Mean   :21341  
+##                     3rd Qu.:2016                      3rd Qu.:22753  
+##                     Max.   :2016                      Max.   :24715  
+##  Total_arrests      Total_RTR        SOF_only        UOF_only    
+##  Min.   : 889.0   Min.   :25.00   Min.   : 6.00   Min.   :15.00  
+##  1st Qu.: 947.8   1st Qu.:32.00   1st Qu.: 9.75   1st Qu.:16.00  
+##  Median : 994.5   Median :35.50   Median :12.00   Median :19.50  
+##  Mean   :1013.2   Mean   :39.67   Mean   :11.67   Mean   :21.92  
+##  3rd Qu.:1046.2   3rd Qu.:50.50   3rd Qu.:13.25   3rd Qu.:25.75  
+##  Max.   :1246.0   Max.   :56.00   Max.   :19.00   Max.   :35.00  
+##   Transitions    
+##  Min.   : 2.000  
+##  1st Qu.: 3.000  
+##  Median : 6.500  
+##  Mean   : 6.083  
+##  3rd Qu.: 8.000  
+##  Max.   :12.000</code></pre>
+<p>Three years with four quarters each of response-to-resistance (RTR) incidents from the Elgin police department. That’s broken down by the type of response - show of force only, use of force only and transition - show to use of force.</p>
+<p>Now let’s plot total RTR incidents as a line plot</p>
+<pre class="r"><code>plot(df$Total_RTR, type=&quot;b&quot;,
+     xlab = &quot;Year, Quarter&quot;, 
+     ylab = &quot;Incidents&quot;,
+     main = &quot;Total RTR incidents&quot;)</code></pre>
+<p><img src="04_basicLines_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>It’s a pretty simple graphic, but flawed.</p>
+<p><strong>plot(df$Total_RTR,</strong> plots the Total_RTR column.</p>
+<p><strong>type=‘b’</strong> tells plot to make this a line chart with dots at the points. All the other items should be obvious.</p>
+<p>But look at the axis at the bottom (x axis)! Instead of the year and quarter, it’s using the row number of the information. <strong>plot(</strong> doesn’t take the <strong>label=</strong> command.</p>
+<p>The axis on the side - the y axis - isn’t great either. It starts at 25, which makes it look like some of the items are near zero if you don’t look at the scale.</p>
+<p>So we’re going to need to do some design work and build the plot from the ground up. And as long as we’re doing that, let’s plot the three categories of RTR as separate lines.</p>
+<p>The first thing we need to do is figure out the overall size of the plot, and that means we have to figure out the range of values for the x and y axis. And the command we’ll use to do that is called <strong>range</strong></p>
+<p>For the x axis, we’ll want to know the number of rows. We want a start number which we can supply and an end number, which we find out using <strong>NROW</strong> which counts the number of rows in a column.</p>
+<pre class="r"><code>xrange &lt;- range(1,NROW(df$Year_Quarter))
+xrange</code></pre>
+<pre><code>## [1]  1 12</code></pre>
+<p>Next for the y axis, we need to figure out the highest value out of all three of the columns we want to plot.</p>
+<p>Range takes care of that for us. We just need to supply the starting point (0) and then supply the three columns. Range finds the highest number out of the three.</p>
+<pre class="r"><code>xrange &lt;- range(1,NROW(df$Year_Quarter))
+yrange &lt;- range(0,df$SOF_only,df$UOF_only,df$Transitions)
+yrange</code></pre>
+<pre><code>## [1]  0 35</code></pre>
+<p>Now we can plot, using the values in xrange and yrange to set the size of the plot area.</p>
+<pre class="r"><code>xrange &lt;- range(1,NROW(df$Year_Quarter))
+yrange &lt;- range(0,df$SOF_only,df$UOF_only,df$Transitions)
+plot(xrange, yrange, type=&quot;n&quot;, axes=FALSE,
+     xlab = &quot;Year, Quarter&quot;, ylab = &quot;Incidents&quot;,
+     main = &quot;Total RTR incidents&quot;)</code></pre>
+<p><img src="04_basicLines_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>The only things you see are the labels. We told R not to plot with <strong>type=‘n’</strong> and set axes to False.</p>
+<p>So now we can add each line individualy.</p>
+<pre class="r"><code>xrange &lt;- range(1,NROW(df$Year_Quarter))
+yrange &lt;- range(0,df$SOF_only,df$UOF_only,df$Transitions)
+plot(xrange, yrange, type=&quot;n&quot;, axes=FALSE,
+     xlab = &quot;Year, Quarter&quot;, ylab = &quot;Incidents&quot;,
+     main = &quot;Total RTR incidents&quot;)
+lines(df$SOF_only, 
+      type = &quot;b&quot;, 
+      pch=19, 
+      col = &quot;orange&quot;, 
+      lwd=2)
+lines(df$UOF_only, 
+      type = &quot;b&quot;, 
+      pch=17, 
+      col = &quot;blue&quot;, 
+      lwd=2)
+lines(df$Transitions, 
+      type = &quot;b&quot;, 
+      pch=15, 
+      col = &quot;darkgreen&quot;, 
+      lwd=2)</code></pre>
+<p><img src="04_basicLines_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><strong>lines(</strong> adds a line to the plot, based on values from the column we specify.</p>
+<p><strong>type=‘b’</strong> specifies a line with a dot.</p>
+<p><strong>pch=19</strong> indicates what type of symbol we want. 19 is a solid circle. Use ?pch to see other symbols.</p>
+<p><strong>lwd</strong> is line weight. Default is 1, but we made our lines thicker.</p>
+<p>Now let’s add the x axis</p>
+<pre class="r"><code>xrange &lt;- range(1,NROW(df$Year_Quarter))
+yrange &lt;- range(0,df$SOF_only,df$UOF_only,df$Transitions)
+plot(xrange, yrange, type=&quot;n&quot;, axes=FALSE,
+     xlab = &quot;Year, Quarter&quot;, ylab = &quot;Incidents&quot;,
+     main = &quot;Total RTR incidents&quot;)
+lines(df$SOF_only, 
+      type = &quot;b&quot;, 
+      pch=19, 
+      col = &quot;orange&quot;, 
+      lwd=2)
+lines(df$UOF_only, 
+      type = &quot;b&quot;, 
+      pch=17, 
+      col = &quot;blue&quot;, 
+      lwd=2)
+lines(df$Transitions, 
+      type = &quot;b&quot;, 
+      pch=15, 
+      col = &quot;darkgreen&quot;, 
+      lwd=2)
+axis(1, las=1, at=1:xrange[2], 
+     tck = .05,
+     lab=c(&quot;1Q\n2014&quot;,&quot;2Q\n&quot;,&quot;3Q\n&quot;,&quot;4Q\n&quot;,&quot;1Q\n2015&quot;,&quot;2Q\n&quot;,&quot;3Q\n&quot;,&quot;4Q\n&quot;,&quot;1Q\n2016&quot;,&quot;2Q\n&quot;,&quot;3Q\n&quot;,&quot;4Q\n&quot;) )</code></pre>
+<p><img src="04_basicLines_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>We’re getting into design here, but a lot of doing graphics involves design.</p>
+<p><strong>axis(1,</strong> adds the x axis. For the y, we’ll use 2.</p>
+<p><strong>las=1</strong> makes the labels horizontal.</p>
+<p><strong>at=1:xrange[2],</strong> at= tells it where to put tick marks. We start at the first position and go to the highest number in our xrange. Xrange has only two numbers in it, so ask the second one.</p>
+<p><strong>tck = .05,</strong> Sets the size of the ticks. In this case, they’re short.</p>
+<p><strong>lab=c(</strong> Here we got a little fancy. If we tried to put all the labels in, they’d run into each other. But we need something for each of the 12 ticks. So we label the first tick <strong>1Q</strong> then a line break slash “N” then the year <strong>2014</strong>. For 2Q-4Q, it’s just the quarter then the line break so the label is flush with the line.</p>
+<p>Now let’s add the y axis</p>
+<pre class="r"><code>xrange &lt;- range(1,NROW(df$Year_Quarter))
+yrange &lt;- range(0,df$SOF_only,df$UOF_only,df$Transitions)
+plot(xrange, yrange, type=&quot;n&quot;, axes=FALSE,
+     xlab = &quot;Year, Quarter&quot;, ylab = &quot;Incidents&quot;,
+     main = &quot;Total RTR incidents&quot;)
+lines(df$SOF_only, 
+      type = &quot;b&quot;, 
+      pch=19, 
+      col = &quot;orange&quot;, 
+      lwd=2)
+lines(df$UOF_only, 
+      type = &quot;b&quot;, 
+      pch=17, 
+      col = &quot;blue&quot;, 
+      lwd=2)
+lines(df$Transitions, 
+      type = &quot;b&quot;, 
+      pch=15, 
+      col = &quot;darkgreen&quot;, 
+      lwd=2)
+axis(1, las=1, at=1:xrange[2], 
+     tck = .05,
+     lab=c(&quot;1Q\n2014&quot;,&quot;2Q\n&quot;,&quot;3Q\n&quot;,&quot;4Q\n&quot;,&quot;1Q\n2015&quot;,&quot;2Q\n&quot;,&quot;3Q\n&quot;,&quot;4Q\n&quot;,&quot;1Q\n2016&quot;,&quot;2Q\n&quot;,&quot;3Q\n&quot;,&quot;4Q\n&quot;) )
+axis(2, las=1, at=5*0:yrange[2], tck = 1, lty=3)</code></pre>
+<p><img src="04_basicLines_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><strong>axis(2</strong> sets up the y axis, <strong>las=1</strong> makes sure the text labels are horizontal.</p>
+<p><strong>at+5*0:yrange[2]</strong> starts the ticks at 0 and counts them by 5 to the top of the <strong>yrange[2]</strong></p>
+<p><strong>tck=1</strong> has the line go all the way across</p>
+<p><strong>lty</strong> is the line type, in this case dots.</p>
+<p>Finally, let’s add a legend</p>
+<pre class="r"><code>xrange &lt;- range(1,NROW(df$Year_Quarter))
+yrange &lt;- range(0,df$SOF_only,df$UOF_only,df$Transitions)
+plot(xrange, yrange, type=&quot;n&quot;, axes=FALSE,
+     xlab = &quot;Year, Quarter&quot;, ylab = &quot;Incidents&quot;,
+     main = &quot;Total RTR incidents&quot;)
+lines(df$SOF_only, 
+      type = &quot;b&quot;, 
+      pch=19, 
+      col = &quot;orange&quot;, 
+      lwd=2)
+lines(df$UOF_only, 
+      type = &quot;b&quot;, 
+      pch=17, 
+      col = &quot;blue&quot;, 
+      lwd=2)
+lines(df$Transitions, 
+      type = &quot;b&quot;, 
+      pch=15, 
+      col = &quot;darkgreen&quot;, 
+      lwd=2)
+axis(1, las=1, at=1:xrange[2], 
+     tck = .05,
+     lab=c(&quot;1Q\n2014&quot;,&quot;2Q\n&quot;,&quot;3Q\n&quot;,&quot;4Q\n&quot;,&quot;1Q\n2015&quot;,&quot;2Q\n&quot;,&quot;3Q\n&quot;,&quot;4Q\n&quot;,&quot;1Q\n2016&quot;,&quot;2Q\n&quot;,&quot;3Q\n&quot;,&quot;4Q\n&quot;) )
+axis(2, las=1, at=5*0:yrange[2], tck = 1, lty=3)
+legend(1, yrange[2], 
+       c(&quot;SOF Only&quot;, &quot;UOF only&quot;, &quot;Transition&quot;), 
+       cex=0.8, 
+       col=c(&quot;Orange&quot;,&quot;blue&quot;,&quot;darkgreen&quot;), 
+       pch=c(19,17,15), lwd=2)</code></pre>
+<p><img src="04_basicLines_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Now we have the complete plot.</p>
+<p><strong>legend(1,yrange[2]</strong> legend is the command, 1 is the x position, yrange[2] is the y postion. So top left.</p>
+<p>The next commands should be understandable.</p>
+<p>Basic plots are OK, but we had to go to some lengths to get a decent looking line chart. When we start working with ggplot2, it should be a lot easier.</p>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

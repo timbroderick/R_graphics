@@ -1,0 +1,9 @@
+name: "R_graphics"
+output_dir: "."
+navbar:
+  title: "Making graphics with R"
+  left:
+    - text: "Introduction"
+      href: index.html
+    - text: "00_Navigation"
+      href: 00_Navigation.html

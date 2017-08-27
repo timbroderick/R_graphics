@@ -1,0 +1,336 @@
+---
+title: "08_ggplotBars"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Building a bar chart with ggplot2
+
+We're going to build a bar chart using ggplot2 showing the total RTR incidents by quarter. "Build" is the right word to use, because we're going to start with something simple and build to something that's just about publication ready.
+
+Publication ready means the chart is designed and sized appropriately for where it will appear. Ggplot2 makes this easier, but there's still some work needed by you.
+
+Let's start by loading in the libraries and data we need.
+
+```{r}
+
+library(readr)
+library(ggplot2)
+library(ggthemes)
+
+df <- read_csv("dfCrime.csv")
+
+summary(df)
+
+```
+
+Let's create a basic bar chart
+
+```{r}
+
+basebar <- ggplot(df) + 
+  aes(x = Year_Quarter, 
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat="identity") + 
+  coord_flip()
+basebar
+
+```
+
+And that's it. That's all you need to do to create a bar chart. Everything after this bit of code is about the design of the chart - colors, labels, headlines and such.
+
+Here's what the code does:
+
+__basebar <-__ is the variable that stores the chart commands. This way we're not generating charts in the plot window until we call it.
+
+__ggplot(df) +__ calls ggplot and tells it what dataframe to use.
+
+__aes(x = Year_Quarter, y = Total_RTR, fill = factor(year)) + __ _aes_ generally stands for aesthetics. Going forward, it's kind of the catch-all place to put a bunch of information. In this case, we're telling ggplot that we want our X axis to be the Year_Quarter column and the Y axis to be Total_RTR. We're going to start a bit fancy and have the bars colored by year, using _fill =_ and setting _year_ as a factor. If you recall, factors group common things in the year column together.
+
+__geom_bar(stat="identity")__ tells ggplot that we want to plot the values in Total_RTR, not count up the different values to make a histogram.
+
+__coord_flip()__ makes it a horizontal chart instead of vertical.
+
+Right away, there's a problem: The bars are sorted by the Year_Quarter column, but 2016 4Q is at the top and 2014 1Q is at the bottom. You want to have people read charts left-to-right and top-to-bottom. Unfortunately we can't just have ggplot reverse the order - we have to give ggplot something to sort by. Here's how we'll do that:
+
+```{r}
+
+df <-df[order(df$Year_Quarter),]
+df$sort <- seq.int(nrow(df)) 
+head(df)
+
+```
+
+
+__df[order(df$Year\_Quarter),]__ This simply sorts the dataframe df by the column Year_Quarter. If you look at df at this point, you'll see it's sorted with 2014 1Q at top. If you wanted to sort it in the opposite way, you would use _-order[_. That trailing comma _,]_ is important.
+
+It would be great if ggplot respected that, but no. So we have to record the order that we want.
+
+__df\$sort<-seq.int(nrow(df))__ creates a new column _df\$sort_ and puts the number of each row _seq.int(nrow(df))_ into that column.
+
+Look at the first six rows of the dataframe using __head(df)__. On the very far left, you can see the row number. Now look at the _sort_ column and you can see we've stored that number there.
+
+Now let's use that to sort our bar chart.
+
+```{r}
+
+basebar <- ggplot(df) + 
+  aes(x = reorder(Year_Quarter, -sort), # Sort
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat="identity") + 
+  coord_flip()
+basebar
+```
+
+__x=reorder(Year_Quarter,-sort),__ tells ggplot to reorder the X axis. We first give the column we want ggplot to use for X (Year_Quarter) then tell it what to reorder by: -sort. Try using just "sort" instead of "-sort" to see what happens.
+
+This is nice, but let's add some descriptive text.
+
+```{r}
+
+basebar <- ggplot(df) + 
+  aes(x = reorder(Year_Quarter, -sort), 
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat="identity") + 
+  coord_flip()
+
+# add all the titles.
+basebar <- basebar + labs(
+  title="Response to resistance",
+  subtitle="Elgin police have increased their use of\nnon-lethal force in response to resistance.",
+  x="YEAR, QUARTER", 
+  y="RESPONSE TO RESISTANCE INSTANCES",
+  caption="\nSource: Elgin police")
+basebar
+
+```
+
+__basebar <- basebar + labs(__ Here we're building up our graphic. We're saying take __basebar__ and add __+ labs(__, or labels to it and store it in  __basebar <-__. That can be a bit confusing, but it makes sense when you say it like this: Basebar now equals whatever we did before plus all this new stuff.
+
+Every thing else should be obvious, but I want to point out that we need to put in line breaks with "\\n", otherwise the text just keeps going. Sometimes you'll have to put in a line break, run the plot and then adjust it again. 
+
+Next, we don't need a legend so let's just remove it.
+
+```{r}
+
+basebar <- ggplot(df) + 
+  aes(x = reorder(Year_Quarter, -sort), 
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat="identity") + 
+  coord_flip()
+
+basebar <- basebar + labs(
+  title="Response to resistance",
+  subtitle="Elgin police have increased their use of\nnon-lethal force in response to resistance.",
+  x="YEAR, QUARTER", 
+  y="RESPONSE TO RESISTANCE INSTANCES",
+  caption="\nSource: Elgin police")
+
+# Remove lengend
+basebar <- basebar + theme(legend.position="None")
+
+basebar
+
+```
+
+The labels on the side are kind of repetative. Let's substitute them with something that highlights the year.
+
+```{r}
+
+basebar <- ggplot(df) + 
+  aes(x = reorder(Year_Quarter, -sort), 
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat="identity") + 
+  coord_flip()
+
+basebar <- basebar + labs(
+  title="Response to resistance",
+  subtitle="Elgin police have increased their use of\nnon-lethal force in response to resistance.",
+  x="YEAR, QUARTER", 
+  y="RESPONSE TO RESISTANCE INSTANCES",
+  caption="\nSource: Elgin police")
+
+basebar <- basebar + theme(legend.position="None")
+
+# Better x labels
+basebar <- basebar + scale_x_discrete(
+  labels=c("4Q","3Q","2Q","2016 1Q","4Q","3Q","2Q","2015 1Q","4Q","3Q","2Q","2014 1Q")
+)
+
+basebar
+
+```
+
+Remember, we've flipped the X and Y axis, but the X axis is still the X axis. And, we've resorted the Year_Quarter column but we still have to assign the new labels as if we didn't. That's why they're in reverse order in __scale\_x\_discrete(labels=c(__
+
+We're really getting close to a publishable plot! Now we're going to do something very tricky: Let's put the value of each bar on the bar itself.
+
+```{r}
+
+basebar <- ggplot(df) + 
+  aes(x = reorder(Year_Quarter, -sort), 
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat="identity") + 
+  coord_flip()
+
+basebar <- basebar + labs(
+  title="Response to resistance",
+  subtitle="Elgin police have increased their use of\nnon-lethal force in response to resistance.",
+  x="YEAR, QUARTER", 
+  y="RESPONSE TO RESISTANCE INSTANCES",
+  caption="\nSource: Elgin police")
+
+basebar <- basebar + theme(legend.position="None")
+
+basebar <- basebar + scale_x_discrete(
+  labels=c("4Q","3Q","2Q","2016 1Q","4Q","3Q","2Q","2015 1Q","4Q","3Q","2Q","2014 1Q")
+)
+
+# add values to the bars
+basebar <- basebar + geom_text(
+  position = "stack", 
+  aes(x = Year_Quarter, 
+      y = Total_RTR - (Total_RTR * 0.025), 
+      hjust = 1,
+      label = Total_RTR),
+  size=5,
+  fontface="bold",
+  color="white"
+  )
+
+basebar
+
+```
+
+What we're doing with __geom\_text__ is 
+
+* put the value of each bar on top of the bar
+
+* place it all the way at the end of the bar minus a little bit so it's kind of offset from the end
+
+* size the text and make it bold and white
+
+This is one of those things you don't have to understand to use, so we won't go over it. But take some time to look it over and understand as it'll be reused in later plots.
+
+At this point we've got a pretty good looking plot. Let's do one more thing to make it ready to go: style elements.
+
+We're going to do that by creating a function that uses a theme from the ggthemes library (538, modeled after the statistics website) with some modifications that make it useful for our publication purposes.
+
+Let's look at the final plot:
+
+```{r}
+
+#---------------------
+
+# This function set styles for the chart
+# Be sure to run it before you plot
+
+theme_gfx <- function(...) {
+  theme_set(theme_get() + theme(text = element_text(family = 'Verdana', size= 12, lineheight=0.9))) + 
+    theme(
+      # edit background colors
+      plot.background = element_blank(),
+      legend.background = element_blank(),
+      panel.background=element_rect(fill="#E5E5E5"),
+      strip.background=element_rect(fill="#E5E5E5"),
+      # modify grid and tick lines
+      panel.grid.major = element_line(size = .6, color="#D2D2D2"),
+      panel.grid.minor = element_line(size = .6, color="#D2D2D2", linetype = "dashed"),
+      axis.ticks = element_blank(),
+      # edit font sizes
+      plot.title = element_text(size = 27,face="bold"),
+      plot.subtitle = element_text(size = 18),
+      legend.title=element_text(size = 13,face="bold"),
+      legend.text=element_text(size=14.7),
+      axis.title=element_text(size=15, face="bold"),
+      axis.text=element_text(size=13.5),
+      plot.caption=element_text(size=13.5, hjust=0),
+      strip.text = element_text(face="bold", size=13.5, hjust=0),
+      # This puts the legend across the top
+      legend.position="top", 
+      legend.direction="horizontal",
+      # removes label for legend
+      #legend.title = element_blank(),
+      ...
+    )
+}
+
+#-----Insert plot here -------------
+
+basebar <- ggplot(df) + 
+  aes(x = reorder(Year_Quarter, -sort), 
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat="identity") + 
+  coord_flip() + theme_gfx() # add the theme
+
+# add all the titles.
+basebar <- basebar + labs(
+  title="Response to resistance",
+  subtitle="Elgin police have increased their use of\nnon-lethal force in response to resistance.",
+  x="YEAR, QUARTER", 
+  y="RESPONSE TO RESISTANCE INSTANCES",
+  caption="\nSource: Elgin police")
+
+# Remove lengend
+basebar <- basebar + theme(legend.position="None")
+
+# Better x labels
+basebar <- basebar + scale_x_discrete(
+  labels=c("4Q","3Q","2Q","2016 1Q","4Q","3Q","2Q","2015 1Q","4Q","3Q","2Q","2014 1Q")
+)
+
+# add values to the bars
+basebar <- basebar + geom_text(
+  position = "stack", 
+  aes(x = Year_Quarter, 
+      y = Total_RTR - (Total_RTR * 0.025), 
+      hjust = 1,
+      label = Total_RTR),
+  family="Verdana", # set the font family
+  size=5,
+  fontface="bold",
+  color="white"
+  )
+
+# Add a color scheme for the chart
+basebar <- basebar + scale_colour_manual( values = c("#0063A5", "#DE731D", "#009964", "#DA2128", "#6F2C91") ) + scale_fill_manual( values = c("#0063A5", "#DE731D", "#009964", "#DA2128", "#6F2C91") )
+
+basebar
+
+#----- End plot --------------
+
+```
+
+Now we have bold and upsized headlines. All the text is sized to work for online and print.
+
+(If you're working with the R script, you should click on the "zoom" button in the plot window to best see the results.)
+
+I'm not going to spend a lot of time going over the function. For it to be applied to the graphic, you have to control-return it first. 
+
+Then simply add __theme\_gfx()__ to the graphic.
+
+This style for the graphic is one we'll use in the future. At some point we may tweak it and store it as a local library that needs to be loaded in to your R scripts. But for now, it'll be one of the things at the top of each file.
+
+Not included here is the __windowsFonts__ line. It's necessary for windows computers to recognize the font we want to use. It'll throw an error on Mac computers, but that can be ignored.
+
+We've also set the font family for the bar labels, and added a new color scale with __scale_colour_manual__ and __scale_fill_manual(__
+
+Please feel free to explore more, either by typing ?theme or googling "ggplot2 theme."
+
+For now, though, we have a publication-ready graphic. Next we'll see how to create the files needed for publication.
+

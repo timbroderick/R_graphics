@@ -1,0 +1,77 @@
+---
+title: "02_basicDots"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The dot chart is like a bar chart, but with a dot instead of a bar. 
+
+First we load the readr library and then the dataset.
+
+```{r}
+library(readr)
+df <- read_csv("dfCrime.csv")
+```
+
+Now let's use summary() to remind us of what the data is
+
+```{r}
+summary(df)
+```
+
+Three years with four quarters each of response-to-resistance (RTR) incidents from the Elgin police department. That's broken down by the type of response - show of force only, use of force only and transition - show to use of force.
+
+Making a dot plot is pretty simple
+
+```{r}
+dotchart(df$Total_RTR,labels=df$Year_Quarter,
+         main="RTR incidents by year, quarter",
+         xlab="RTR incidents")
+```
+
+__dotchart(__ is the main command.
+
+__df\$Total_RTR__ is the column we want to chart, followed by a comma. 
+
+__labels = __ is the column we want to use as labels (comma)
+
+__title__ and __main__ are pretty obvious.
+
+The result uses a dot to represent the number for each value in Total_RTR. Using this we can see that RTR incidents increased dramatically starting in the fourth quarter of 2015. 
+
+We're not able to sort basic plots like this very well, so the order is most recent on top.
+
+But we can add some color based on the year.
+
+```{r}
+df$color[df$year==2014] <- "red" 
+df$color[df$year==2015] <- "blue" 
+df$color[df$year==2016] <- "darkgreen" 
+
+dotchart(df$Total_RTR,labels=df$Year_Quarter,cex=.9,
+         main="RTR incidents\ngrouped by year",
+         xlab="RTR incidents", 
+         color=df$color) 
+```
+
+__df\$color[df$year==2014] <- "red"__ creates a new column __df\$color__, selects the rows where __df\$year__ is equal to 2014 __[df\$year==2014]__ and assigns the word red to it __<- "red"__ 
+
+The first time we do this, it generates a warning that we can ignore - we're using the column at the same time as creating it, but apparently that's OK.
+
+We do the same for the other two years in the data set. If you take a look at df now, you'll see there's a new column called "color" with the color names in there.
+
+Then we plot the same way as before, with a couple of differences
+
+__cex=.9__ adjusts the size of the text to be 90% of full size. You can experiment with different sizes, but mainly it's to make things easier to read on the screen.
+
+__color=df$color__ tells the plot to use the color named in the new column we added. "red," "blue" and "darkgreen" are all colors that R understands in plain language. 
+
+Here's a complete list of colors R recognizes: http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf

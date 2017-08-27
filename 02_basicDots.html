@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>02_basicDots</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making graphics with R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="00_Navigation.html">00_Navigation</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">02_basicDots</h1>
+
+</div>
+
+
+<p>The dot chart is like a bar chart, but with a dot instead of a bar.</p>
+<p>First we load the readr library and then the dataset.</p>
+<pre class="r"><code>library(readr)
+df &lt;- read_csv(&quot;dfCrime.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Year_Quarter = col_character(),
+##   year = col_integer(),
+##   quarter = col_character(),
+##   Total_CFS = col_integer(),
+##   Total_arrests = col_integer(),
+##   Total_RTR = col_integer(),
+##   SOF_only = col_integer(),
+##   UOF_only = col_integer(),
+##   Transitions = col_integer()
+## )</code></pre>
+<p>Now let’s use summary() to remind us of what the data is</p>
+<pre class="r"><code>summary(df)</code></pre>
+<pre><code>##  Year_Quarter            year        quarter            Total_CFS    
+##  Length:12          Min.   :2014   Length:12          Min.   :18178  
+##  Class :character   1st Qu.:2014   Class :character   1st Qu.:19663  
+##  Mode  :character   Median :2015   Mode  :character   Median :21544  
+##                     Mean   :2015                      Mean   :21341  
+##                     3rd Qu.:2016                      3rd Qu.:22753  
+##                     Max.   :2016                      Max.   :24715  
+##  Total_arrests      Total_RTR        SOF_only        UOF_only    
+##  Min.   : 889.0   Min.   :25.00   Min.   : 6.00   Min.   :15.00  
+##  1st Qu.: 947.8   1st Qu.:32.00   1st Qu.: 9.75   1st Qu.:16.00  
+##  Median : 994.5   Median :35.50   Median :12.00   Median :19.50  
+##  Mean   :1013.2   Mean   :39.67   Mean   :11.67   Mean   :21.92  
+##  3rd Qu.:1046.2   3rd Qu.:50.50   3rd Qu.:13.25   3rd Qu.:25.75  
+##  Max.   :1246.0   Max.   :56.00   Max.   :19.00   Max.   :35.00  
+##   Transitions    
+##  Min.   : 2.000  
+##  1st Qu.: 3.000  
+##  Median : 6.500  
+##  Mean   : 6.083  
+##  3rd Qu.: 8.000  
+##  Max.   :12.000</code></pre>
+<p>Three years with four quarters each of response-to-resistance (RTR) incidents from the Elgin police department. That’s broken down by the type of response - show of force only, use of force only and transition - show to use of force.</p>
+<p>Making a dot plot is pretty simple</p>
+<pre class="r"><code>dotchart(df$Total_RTR,labels=df$Year_Quarter,
+         main=&quot;RTR incidents by year, quarter&quot;,
+         xlab=&quot;RTR incidents&quot;)</code></pre>
+<p><img src="02_basicDots_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><strong>dotchart(</strong> is the main command.</p>
+<p><strong>df$Total_RTR</strong> is the column we want to chart, followed by a comma.</p>
+<p><strong>labels = </strong> is the column we want to use as labels (comma)</p>
+<p><strong>title</strong> and <strong>main</strong> are pretty obvious.</p>
+<p>The result uses a dot to represent the number for each value in Total_RTR. Using this we can see that RTR incidents increased dramatically starting in the fourth quarter of 2015.</p>
+<p>We’re not able to sort basic plots like this very well, so the order is most recent on top.</p>
+<p>But we can add some color based on the year.</p>
+<pre class="r"><code>df$color[df$year==2014] &lt;- &quot;red&quot; </code></pre>
+<pre><code>## Warning: Unknown or uninitialised column: &#39;color&#39;.</code></pre>
+<pre class="r"><code>df$color[df$year==2015] &lt;- &quot;blue&quot; 
+df$color[df$year==2016] &lt;- &quot;darkgreen&quot; 
+
+dotchart(df$Total_RTR,labels=df$Year_Quarter,cex=.9,
+         main=&quot;RTR incidents\ngrouped by year&quot;,
+         xlab=&quot;RTR incidents&quot;, 
+         color=df$color) </code></pre>
+<p><img src="02_basicDots_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><strong>df$color[df$year==2014] &lt;- “red”</strong> creates a new column <strong>df$color</strong>, selects the rows where <strong>df$year</strong> is equal to 2014 <strong>[df$year==2014]</strong> and assigns the word red to it <strong>&lt;- “red”</strong></p>
+<p>The first time we do this, it generates a warning that we can ignore - we’re using the column at the same time as creating it, but apparently that’s OK.</p>
+<p>We do the same for the other two years in the data set. If you take a look at df now, you’ll see there’s a new column called “color” with the color names in there.</p>
+<p>Then we plot the same way as before, with a couple of differences</p>
+<p><strong>cex=.9</strong> adjusts the size of the text to be 90% of full size. You can experiment with different sizes, but mainly it’s to make things easier to read on the screen.</p>
+<p><strong>color=df$color</strong> tells the plot to use the color named in the new column we added. “red,” “blue” and “darkgreen” are all colors that R understands in plain language.</p>
+<p>Here’s a complete list of colors R recognizes: <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf" class="uri">http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf</a></p>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

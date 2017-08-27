@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>06_basicPlots2</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making graphics with R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="00_Navigation.html">00_Navigation</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">06_basicPlots2</h1>
+
+</div>
+
+
+<p>In the previous tutorial, we used the <strong>par</strong> command to create space for three seperate plots, which allowed us to compare the three categories of Response to Response to resistance to total RTR.</p>
+<p>In this tutorial, we’ll use color to explore the data.</p>
+<p>Load the readr library and then the dataset.</p>
+<pre class="r"><code>library(readr)
+df &lt;- read_csv(&quot;dfCrime.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Year_Quarter = col_character(),
+##   year = col_integer(),
+##   quarter = col_character(),
+##   Total_CFS = col_integer(),
+##   Total_arrests = col_integer(),
+##   Total_RTR = col_integer(),
+##   SOF_only = col_integer(),
+##   UOF_only = col_integer(),
+##   Transitions = col_integer()
+## )</code></pre>
+<p>Now let’s use summary() to remind us of what the data is</p>
+<pre class="r"><code>summary(df)</code></pre>
+<pre><code>##  Year_Quarter            year        quarter            Total_CFS    
+##  Length:12          Min.   :2014   Length:12          Min.   :18178  
+##  Class :character   1st Qu.:2014   Class :character   1st Qu.:19663  
+##  Mode  :character   Median :2015   Mode  :character   Median :21544  
+##                     Mean   :2015                      Mean   :21341  
+##                     3rd Qu.:2016                      3rd Qu.:22753  
+##                     Max.   :2016                      Max.   :24715  
+##  Total_arrests      Total_RTR        SOF_only        UOF_only    
+##  Min.   : 889.0   Min.   :25.00   Min.   : 6.00   Min.   :15.00  
+##  1st Qu.: 947.8   1st Qu.:32.00   1st Qu.: 9.75   1st Qu.:16.00  
+##  Median : 994.5   Median :35.50   Median :12.00   Median :19.50  
+##  Mean   :1013.2   Mean   :39.67   Mean   :11.67   Mean   :21.92  
+##  3rd Qu.:1046.2   3rd Qu.:50.50   3rd Qu.:13.25   3rd Qu.:25.75  
+##  Max.   :1246.0   Max.   :56.00   Max.   :19.00   Max.   :35.00  
+##   Transitions    
+##  Min.   : 2.000  
+##  1st Qu.: 3.000  
+##  Median : 6.500  
+##  Mean   : 6.083  
+##  3rd Qu.: 8.000  
+##  Max.   :12.000</code></pre>
+<p>Three years with four quarters each of response-to-resistance (RTR) incidents from the Elgin police department. That’s broken down by the type of response - show of force only, use of force only and transition - show to use of force.</p>
+<p>Generate the basic scatter plot, with custom labels</p>
+<pre class="r"><code>plot(df$Total_RTR, df$UOF_only, 
+     main = &quot;UOF vs Total RTR incidents&quot;, 
+     xlab=&quot;Total response to resistance incidents&quot;, 
+     ylab=&quot;Use of force incidents only&quot;)</code></pre>
+<p><img src="06_basicPlots2_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>One of the factors this data has is the year it occured. We can use color to see it. First, we need to select the data that’s associated with each year and add them to the plot.</p>
+<pre class="r"><code>plot(df$Total_RTR, df$UOF_only, 
+     main = &quot;UOF vs Total RTR incidents&quot;, 
+     xlab=&quot;Total response to resistance incidents&quot;, 
+     ylab=&quot;Use of force incidents only&quot;)
+
+y2014 &lt;- subset(df, year==2014)
+y2015 &lt;- subset(df, year==2015)
+y2016 &lt;- subset(df, year==2016)
+points(y2014$Total_RTR,y2014$UOF_only,col=&quot;red&quot;,pch=19)
+points(y2015$Total_RTR,y2015$UOF_only,col=&quot;blue&quot;,pch=19)
+points(y2016$Total_RTR,y2016$UOF_only,col=&quot;green&quot;,pch=19)</code></pre>
+<p><img src="06_basicPlots2_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Using <strong>subset</strong>, we select everything in the dataframe where the column year equals the date and stores it in the a new dataframe. So, <strong>y2014</strong> contains everything were the year = 2014.</p>
+<p>Then, <strong>points</strong> places those points onto the plot. <strong>col</strong> assigns a color, <strong>pch=19</strong> makes the point a filled circle.</p>
+<p>Now add the legend and regression line</p>
+<pre class="r"><code>plot(df$Total_RTR, df$UOF_only, 
+     main = &quot;UOF vs Total RTR incidents&quot;, 
+     xlab=&quot;Total response to resistance incidents&quot;, 
+     ylab=&quot;Use of force incidents only&quot;)
+
+y2014 &lt;- subset(df, year==2014)
+y2015 &lt;- subset(df, year==2015)
+y2016 &lt;- subset(df, year==2016)
+points(y2014$Total_RTR,y2014$UOF_only,col=&quot;red&quot;,pch=19)
+points(y2015$Total_RTR,y2015$UOF_only,col=&quot;blue&quot;,pch=19)
+points(y2016$Total_RTR,y2016$UOF_only,col=&quot;green&quot;,pch=19)
+
+legend(&quot;topleft&quot;, 
+       pch = c(19,19,19), 
+       col = c(&quot;red&quot;,&quot;blue&quot;,&quot;green&quot;), 
+       legend = c(&quot;2014&quot;, &quot;2015&quot;, &quot;2016&quot;))
+abline(lm(df$UOF_only~df$Total_RTR))</code></pre>
+<p><img src="06_basicPlots2_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Using color adds another dimension to the chart.</p>
+<div id="using-color-to-plot-categories" class="section level3">
+<h3>Using color to plot categories</h3>
+<p>We can use color to plot all three of the Response to Resistance categories in a single plot.</p>
+<p>First let’s clear the plot window with the dev.off() command.</p>
+<pre class="r"><code>dev.off()</code></pre>
+<pre><code>## null device 
+##           1</code></pre>
+<p>Then, set up the entire graphic by plotting the first category, Use of Force</p>
+<pre class="r"><code>plot(df$Total_RTR, df$UOF_only, 
+     main = &quot;Response to resistance incidents&quot;, 
+     xlab=&quot;Total response to resistance incidents&quot;, 
+     ylab=&quot;Response by type&quot;,
+     xlim=c(0,60), ylim=c(0,35),col=&quot;red&quot;,pch=19)</code></pre>
+<p><img src="06_basicPlots2_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>We set all the titles and labels, the extents of the axes and make the UOF points a filled red circle.</p>
+<p>Then add the other two categories to the existing plot.</p>
+<pre class="r"><code>plot(df$Total_RTR, df$UOF_only, 
+     main = &quot;Response to resistance incidents&quot;, 
+     xlab=&quot;Total response to resistance incidents&quot;, 
+     ylab=&quot;Response by type&quot;,
+     xlim=c(0,60), ylim=c(0,35),col=&quot;red&quot;,pch=19)
+points(df$Total_RTR,df$SOF_only,col=&quot;blue&quot;,pch=19)
+points(df$Total_RTR,df$Transitions,col=&quot;green&quot;,pch=19)</code></pre>
+<p><img src="06_basicPlots2_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>To understand what we’re seeing we need a legend.</p>
+<pre class="r"><code>plot(df$Total_RTR, df$UOF_only, 
+     main = &quot;Response to resistance incidents&quot;, 
+     xlab=&quot;Total response to resistance incidents&quot;, 
+     ylab=&quot;Response by type&quot;,
+     xlim=c(0,60), ylim=c(0,35),col=&quot;red&quot;,pch=19)
+points(df$Total_RTR,df$SOF_only,col=&quot;blue&quot;,pch=19)
+points(df$Total_RTR,df$Transitions,col=&quot;green&quot;,pch=19)
+legend(&quot;topleft&quot;, 
+       pch = c(19,19,19), 
+       col = c(&quot;red&quot;,&quot;blue&quot;,&quot;green&quot;), 
+       legend = c(&quot;UOF&quot;, &quot;SOF&quot;, &quot;Transitions&quot;))</code></pre>
+<p><img src="06_basicPlots2_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Finally, we can add regression lines for each category.</p>
+<pre class="r"><code>plot(df$Total_RTR, df$UOF_only, 
+     main = &quot;Response to resistance incidents&quot;, 
+     xlab=&quot;Total response to resistance incidents&quot;, 
+     ylab=&quot;Response by type&quot;,
+     xlim=c(0,60), ylim=c(0,35),
+     col=&quot;red&quot;,
+     pch=19)
+points(df$Total_RTR,df$SOF_only,col=&quot;blue&quot;,pch=19)
+points(df$Total_RTR,df$Transitions,col=&quot;green&quot;,pch=19)
+legend(&quot;topleft&quot;, 
+       pch = c(19,19,19), 
+       col = c(&quot;red&quot;,&quot;blue&quot;,&quot;green&quot;), 
+       legend = c(&quot;UOF&quot;, &quot;SOF&quot;, &quot;Transitions&quot;))
+abline(lm(df$UOF_only~df$Total_RTR, par(col=&quot;red&quot;)))
+abline(lm(df$SOF_only~df$Total_RTR, par(col=&quot;blue&quot;)))
+abline(lm(df$Transitions~df$Total_RTR, par(col=&quot;green&quot;)))</code></pre>
+<p><img src="06_basicPlots2_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>This is good, but what if we have a lot of dots? One way is to make the dots semi-transparent using the <strong>adjustcolor</strong></p>
+<pre class="r"><code>plot(df$Total_RTR, df$UOF_only, 
+     main = &quot;Response to resistance incidents&quot;, 
+     xlab=&quot;Total response to resistance incidents&quot;, 
+     ylab=&quot;Response by type&quot;,
+     xlim=c(0,60), ylim=c(0,35),
+     col=adjustcolor(&quot;red&quot;, alpha=0.4),
+     pch=19)
+points(df$Total_RTR,df$SOF_only,
+       col=adjustcolor(&quot;blue&quot;, alpha=0.4),
+       pch=19)
+points(df$Total_RTR,df$Transitions,
+       col=adjustcolor(&quot;green&quot;, alpha=0.4),
+       pch=19)
+legend(&quot;topleft&quot;, 
+       pch = c(19,19,19), 
+       col = c(&quot;red&quot;,&quot;blue&quot;,&quot;green&quot;), 
+       legend = c(&quot;UOF&quot;, &quot;SOF&quot;, &quot;Transitions&quot;))
+abline(lm(df$UOF_only~df$Total_RTR, par(col=&quot;red&quot;)))
+abline(lm(df$SOF_only~df$Total_RTR, par(col=&quot;blue&quot;)))
+abline(lm(df$Transitions~df$Total_RTR, par(col=&quot;green&quot;)))</code></pre>
+<p><img src="06_basicPlots2_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><strong>alpha</strong> is the command controlling transparency. The value goes from 0 to 1. At 0.4, the dots are 40% visible.</p>
+<p>Depending on how many points are on the chart, and how closely grouped they are, you may want a higher or lower alpha value.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

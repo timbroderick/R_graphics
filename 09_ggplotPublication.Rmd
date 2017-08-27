@@ -1,0 +1,206 @@
+---
+title: "09_ggplotPublication"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Creating files for print and the web
+
+If all we needed to do is create a colorful graphic for us to view on our computers, then there are countless options out there. 
+
+But we need a solution where a reporter or editor can not only create a color graphic for the web that will work with our system, but also a graphic in both color and black-and-white for our print publications. And do it without the help of an art department. 
+
+Right now, this is that solution.
+
+In order to keep this simple, we'll focus on how to do this instead of why. If you do want to know more about why, I'm happy to talk your ear off. But for the purposes of this tutorial, let's create our files.
+
+We're going to create three files:
+
+* A color pdf for print on pages with color available
+
+* A black-and-white, or grayscale, pdf for pages where there is not color available
+
+* A color png file. PNG is another image format, like gif or jpg.
+
+The first big difference in all this is we're not going to use the plot window in Rstudio. Graphics in the plot window scale to fit the window. We're going to need to create graphics in a set size. Actually, two sizes - one for print and one for online.
+
+Here's the full code for the bar chart we created, along with everything we need to create the files:
+
+```{r, eval=FALSE}
+
+library(readr)
+library(Cairo) # To create pdfs with embeded fonts
+library(ggplot2)
+library(ggthemes)
+
+#---------------------
+# For windows devices only
+# windowsFonts(Verdana=windowsFont('Verdana'))
+
+# This function set styles for the chart
+# Be sure to run it before you plot
+
+theme_gfx <- function(...) {
+  theme_set(theme_get() + theme(text = element_text(family = 'Verdana', size= 12, lineheight=0.9))) + 
+    theme(
+      # edit background colors
+      plot.background = element_blank(),
+      legend.background = element_blank(),
+      panel.background=element_rect(fill="#E5E5E5"),
+      strip.background=element_rect(fill="#E5E5E5"),
+      # modify grid and tick lines
+      panel.grid.major = element_line(size = .6, color="#D2D2D2"),
+      panel.grid.minor = element_line(size = .6, color="#D2D2D2", linetype = "dashed"),
+      axis.ticks = element_blank(),
+      # edit font sizes
+      plot.title = element_text(size = 27,face="bold"),
+      plot.subtitle = element_text(size = 18),
+      legend.title=element_text(size = 13,face="bold"),
+      legend.text=element_text(size=14.7),
+      axis.title=element_text(size=15, face="bold"),
+      axis.text=element_text(size=13.5),
+      plot.caption=element_text(size=13.5, hjust=0),
+      strip.text = element_text(face="bold", size=13.5, hjust=0),
+      # This puts the legend across the top
+      legend.position="top", 
+      legend.direction="horizontal",
+      # removes label for legend
+      #legend.title = element_blank(),
+      ...
+    )
+}
+
+#----------------
+# Get and prepare the data
+
+df <- read_csv("dfRTR.csv")
+head(df)
+
+#-----Insert plot here -------------
+
+basebar <- ggplot(df) +
+  aes(x = reorder(Year_Quarter, -sort), 
+      y = Total_RTR, 
+      fill = factor(year) ) +
+  geom_bar(stat="identity") + 
+  coord_flip() + theme_gfx()
+  
+# add all the titles.
+basebar <- basebar + labs(
+  title="Response to resistance",
+  subtitle="Elgin police have increased their use of\nnon-lethal force in response to resistance.",
+  x="YEAR, QUARTER", 
+  y="RESPONSE TO RESISTANCE INSTANCES",
+  caption="\nSource: Elgin police")
+
+# Remove lengend
+basebar <- basebar + theme(legend.position="None")
+
+# Better x labels
+basebar <- basebar + scale_x_discrete(
+  labels=c("4Q","3Q","2Q","2016 1Q","4Q","3Q","2Q","2015 1Q","4Q","3Q","2Q","2014 1Q")
+)
+
+# add values to the bars
+basebar <- basebar + geom_text(
+  position = "stack", 
+  aes(x = Year_Quarter, 
+      y = Total_RTR - (Total_RTR * 0.025), 
+      hjust = 1,
+      label = Total_RTR),
+  size=5,
+  family="Verdana",
+  fontface="bold",
+  color="white"
+  )
+
+# color scheme - comment out for B/W PDF
+basebar <- basebar + scale_colour_manual( values = c("#0063A5", "#DE731D", "#009964", "#DA2128", "#6F2C91") ) + scale_fill_manual( values = c("#0063A5", "#DE731D", "#009964", "#DA2128", "#6F2C91") )
+# make B/W PDF - remember to change name of file!
+#basebar <- basebar + scale_colour_grey(start = 0, end = 0.75) + scale_fill_grey(start = 0, end = 0.75)
+
+basebar
+
+#----- End plot --------------
+
+# save for PDF
+#ggsave("barPlot.pdf", width = 7, height = 5.5, device=cairo_pdf, units = c("in"), dpi = 300, limitsize = FALSE)
+
+# save for web
+#ggsave("barPlot.png", width = 7, height = 5.5, device="png", units = c("in"), dpi = 86, limitsize = FALSE)
+
+```
+
+The first thing we added is __library(Cairo)__. This library allows us to embed fonts into PDFS so that the graphic looks the same no matter what computer you open it on. Windows users should be able to just install it, but if you're on a Mac you'll first need to install something called XQuartz from https://www.xquartz.org/.
+
+
+###Creating files for print
+
+First, if you're on a Windows machine, uncomment out the __windowsFonts__ line. That's necessary for the script to save a pdf in the way we need to.
+
+Now skip all the way to the bottom of the code and look for the first __ggsave__ line:
+
+__# save for PDF__
+__ggsave("barPlot.pdf", width = 7, height = 5.5, device=cairo_pdf, units = c("in"), dpi = 300, limitsize = FALSE)__
+
+In that code, there two things you'll need to fiddle with. The rest you should leave along.
+
+The first is the name of the graphic. You can make it whatever you want as long as it ends with __.pdf__.
+
+The second is the __height__ of the chart. We don't want to change the __width__ of the graphic since it's already set up to be sized as a two-column graphic in print. If you change width, the text may get too small. If you feel you've created something other than a two-column graphic, contact me.
+
+Do this: change __height__ to "3" then run the script. It will create a pdf in the same place as the script. Open that up and preview it. 
+
+Everything in the chart is squished, but the titles look great, right? So you'll have to try different heights until it looks good. For this chart, about 5.5 is right. There's no rule of thumb - you'll have to run the script and then open at the pdf until it looks good.
+
+The other thing you may have to fiddle with are your text titles. They may run too long on some lines so you might need to adjust the \\n line breaks. Again, it's a process of running the script and then looking at the PDF.
+
+Once you have color pdf, you need to make a black and white one. But this is simple - you only need to do three things:
+
+* Comment out the color scheme line: __#basebar <- basebar + scale_colour_manual( values = c("#0063A5", "#DE731D", "#009964", "#DA2128", "#6F2C91") ) + scale_fill_manual( values = c("#0063A5", "#DE731D", "#009964", "#DA2128", "#6F2C91") )__
+
+* Uncomment the grey scheme line: __basebar <- basebar + scale\_colour\_grey(start = 0, end = 0.75) + scale\_fill\_grey(start = 0, end = 0.75)__
+
+* Change the name of the pdf to something like __barPlot\_BW.pdf__. If you forget to do this, you'll overwrite your color version.
+
+Then run the script.
+
+###Creating files for online
+
+The process for making a color png even simplier. 
+
+First, though, comment out the gray scheme line and the PDF ggsave line. You want the graphic to be color and you don't need to make pdfs anymore.
+
+Second, uncomment the png ggsave command:
+
+__ggsave("barPlot.png", width = 7, height = 6.5, device="png", units = c("in"), dpi = 86, limitsize = FALSE)__
+
+You'll notice that the __width__ is the same for the png than for the pdf, but the dpi is different. That's because the pdf is for print and the png is for a computer screen. (It's way more complicated than that.)
+
+But it does mean you can simply change the __height__ to match what you already worked out for the PDF and then run the ggsave command.
+
+And that's it. The PNG can be attached as an Asset to your story. The PDF can be placed on a page and size to be two columns. 
+
+### Important note
+
+Everyone needs a copy editor. In the process of making graphics, you or your editor might become distracted by something - maybe the graphic is SO COOL that you miss an obvious typo.
+
+So optimally, we'll want to create some kind workflow where your editor and/or a copy editor can access the script and data you used to create the chart. 
+
+And, in theory at least, they'll be trained at least to correct or edit headlines and subheads, maybe even fix problems with the numbers. And then rerun the script to create the corrected charts.
+
+That will probably take a while. In the meantime, if you are creating charts this way, the onus is on __you__ to make sure it's edited properly. 
+
+Finally, the template called "P00_printTemplate" is an R script you can use as a base to create your files for publication.
+
+## Next
+
+We're going to explore the various graphic types ggplot2 has, but first we're going to have to work the data a bit.

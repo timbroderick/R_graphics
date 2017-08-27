@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>09_ggplotPublication</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making graphics with R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="00_Navigation.html">00_Navigation</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">09_ggplotPublication</h1>
+
+</div>
+
+
+<div id="creating-files-for-print-and-the-web" class="section level1">
+<h1>Creating files for print and the web</h1>
+<p>If all we needed to do is create a colorful graphic for us to view on our computers, then there are countless options out there.</p>
+<p>But we need a solution where a reporter or editor can not only create a color graphic for the web that will work with our system, but also a graphic in both color and black-and-white for our print publications. And do it without the help of an art department.</p>
+<p>Right now, this is that solution.</p>
+<p>In order to keep this simple, we’ll focus on how to do this instead of why. If you do want to know more about why, I’m happy to talk your ear off. But for the purposes of this tutorial, let’s create our files.</p>
+<p>We’re going to create three files:</p>
+<ul>
+<li><p>A color pdf for print on pages with color available</p></li>
+<li><p>A black-and-white, or grayscale, pdf for pages where there is not color available</p></li>
+<li><p>A color png file. PNG is another image format, like gif or jpg.</p></li>
+</ul>
+<p>The first big difference in all this is we’re not going to use the plot window in Rstudio. Graphics in the plot window scale to fit the window. We’re going to need to create graphics in a set size. Actually, two sizes - one for print and one for online.</p>
+<p>Here’s the full code for the bar chart we created, along with everything we need to create the files:</p>
+<pre class="r"><code>library(readr)
+library(Cairo) # To create pdfs with embeded fonts
+library(ggplot2)
+library(ggthemes)
+
+#---------------------
+# For windows devices only
+# windowsFonts(Verdana=windowsFont(&#39;Verdana&#39;))
+
+# This function set styles for the chart
+# Be sure to run it before you plot
+
+theme_gfx &lt;- function(...) {
+  theme_set(theme_get() + theme(text = element_text(family = &#39;Verdana&#39;, size= 12, lineheight=0.9))) + 
+    theme(
+      # edit background colors
+      plot.background = element_blank(),
+      legend.background = element_blank(),
+      panel.background=element_rect(fill=&quot;#E5E5E5&quot;),
+      strip.background=element_rect(fill=&quot;#E5E5E5&quot;),
+      # modify grid and tick lines
+      panel.grid.major = element_line(size = .6, color=&quot;#D2D2D2&quot;),
+      panel.grid.minor = element_line(size = .6, color=&quot;#D2D2D2&quot;, linetype = &quot;dashed&quot;),
+      axis.ticks = element_blank(),
+      # edit font sizes
+      plot.title = element_text(size = 27,face=&quot;bold&quot;),
+      plot.subtitle = element_text(size = 18),
+      legend.title=element_text(size = 13,face=&quot;bold&quot;),
+      legend.text=element_text(size=14.7),
+      axis.title=element_text(size=15, face=&quot;bold&quot;),
+      axis.text=element_text(size=13.5),
+      plot.caption=element_text(size=13.5, hjust=0),
+      strip.text = element_text(face=&quot;bold&quot;, size=13.5, hjust=0),
+      # This puts the legend across the top
+      legend.position=&quot;top&quot;, 
+      legend.direction=&quot;horizontal&quot;,
+      # removes label for legend
+      #legend.title = element_blank(),
+      ...
+    )
+}
+
+#----------------
+# Get and prepare the data
+
+df &lt;- read_csv(&quot;dfRTR.csv&quot;)
+head(df)
+
+#-----Insert plot here -------------
+
+basebar &lt;- ggplot(df) +
+  aes(x = reorder(Year_Quarter, -sort), 
+      y = Total_RTR, 
+      fill = factor(year) ) +
+  geom_bar(stat=&quot;identity&quot;) + 
+  coord_flip() + theme_gfx()
+  
+# add all the titles.
+basebar &lt;- basebar + labs(
+  title=&quot;Response to resistance&quot;,
+  subtitle=&quot;Elgin police have increased their use of\nnon-lethal force in response to resistance.&quot;,
+  x=&quot;YEAR, QUARTER&quot;, 
+  y=&quot;RESPONSE TO RESISTANCE INSTANCES&quot;,
+  caption=&quot;\nSource: Elgin police&quot;)
+
+# Remove lengend
+basebar &lt;- basebar + theme(legend.position=&quot;None&quot;)
+
+# Better x labels
+basebar &lt;- basebar + scale_x_discrete(
+  labels=c(&quot;4Q&quot;,&quot;3Q&quot;,&quot;2Q&quot;,&quot;2016 1Q&quot;,&quot;4Q&quot;,&quot;3Q&quot;,&quot;2Q&quot;,&quot;2015 1Q&quot;,&quot;4Q&quot;,&quot;3Q&quot;,&quot;2Q&quot;,&quot;2014 1Q&quot;)
+)
+
+# add values to the bars
+basebar &lt;- basebar + geom_text(
+  position = &quot;stack&quot;, 
+  aes(x = Year_Quarter, 
+      y = Total_RTR - (Total_RTR * 0.025), 
+      hjust = 1,
+      label = Total_RTR),
+  size=5,
+  family=&quot;Verdana&quot;,
+  fontface=&quot;bold&quot;,
+  color=&quot;white&quot;
+  )
+
+# color scheme - comment out for B/W PDF
+basebar &lt;- basebar + scale_colour_manual( values = c(&quot;#0063A5&quot;, &quot;#DE731D&quot;, &quot;#009964&quot;, &quot;#DA2128&quot;, &quot;#6F2C91&quot;) ) + scale_fill_manual( values = c(&quot;#0063A5&quot;, &quot;#DE731D&quot;, &quot;#009964&quot;, &quot;#DA2128&quot;, &quot;#6F2C91&quot;) )
+# make B/W PDF - remember to change name of file!
+#basebar &lt;- basebar + scale_colour_grey(start = 0, end = 0.75) + scale_fill_grey(start = 0, end = 0.75)
+
+basebar
+
+#----- End plot --------------
+
+# save for PDF
+#ggsave(&quot;barPlot.pdf&quot;, width = 7, height = 5.5, device=cairo_pdf, units = c(&quot;in&quot;), dpi = 300, limitsize = FALSE)
+
+# save for web
+#ggsave(&quot;barPlot.png&quot;, width = 7, height = 5.5, device=&quot;png&quot;, units = c(&quot;in&quot;), dpi = 86, limitsize = FALSE)</code></pre>
+<p>The first thing we added is <strong>library(Cairo)</strong>. This library allows us to embed fonts into PDFS so that the graphic looks the same no matter what computer you open it on. Windows users should be able to just install it, but if you’re on a Mac you’ll first need to install something called XQuartz from <a href="https://www.xquartz.org/" class="uri">https://www.xquartz.org/</a>.</p>
+<div id="creating-files-for-print" class="section level3">
+<h3>Creating files for print</h3>
+<p>First, if you’re on a Windows machine, uncomment out the <strong>windowsFonts</strong> line. That’s necessary for the script to save a pdf in the way we need to.</p>
+<p>Now skip all the way to the bottom of the code and look for the first <strong>ggsave</strong> line:</p>
+<p><strong># save for PDF</strong> <strong>ggsave(“barPlot.pdf”, width = 7, height = 5.5, device=cairo_pdf, units = c(“in”), dpi = 300, limitsize = FALSE)</strong></p>
+<p>In that code, there two things you’ll need to fiddle with. The rest you should leave along.</p>
+<p>The first is the name of the graphic. You can make it whatever you want as long as it ends with <strong>.pdf</strong>.</p>
+<p>The second is the <strong>height</strong> of the chart. We don’t want to change the <strong>width</strong> of the graphic since it’s already set up to be sized as a two-column graphic in print. If you change width, the text may get too small. If you feel you’ve created something other than a two-column graphic, contact me.</p>
+<p>Do this: change <strong>height</strong> to “3” then run the script. It will create a pdf in the same place as the script. Open that up and preview it.</p>
+<p>Everything in the chart is squished, but the titles look great, right? So you’ll have to try different heights until it looks good. For this chart, about 5.5 is right. There’s no rule of thumb - you’ll have to run the script and then open at the pdf until it looks good.</p>
+<p>The other thing you may have to fiddle with are your text titles. They may run too long on some lines so you might need to adjust the \n line breaks. Again, it’s a process of running the script and then looking at the PDF.</p>
+<p>Once you have color pdf, you need to make a black and white one. But this is simple - you only need to do three things:</p>
+<ul>
+<li><p>Comment out the color scheme line: <strong>#basebar &lt;- basebar + scale_colour_manual( values = c(“#0063A5”, “#DE731D”, “#009964”, “#DA2128”, “#6F2C91”) ) + scale_fill_manual( values = c(“#0063A5”, “#DE731D”, “#009964”, “#DA2128”, “#6F2C91”) )</strong></p></li>
+<li><p>Uncomment the grey scheme line: <strong>basebar &lt;- basebar + scale_colour_grey(start = 0, end = 0.75) + scale_fill_grey(start = 0, end = 0.75)</strong></p></li>
+<li><p>Change the name of the pdf to something like <strong>barPlot_BW.pdf</strong>. If you forget to do this, you’ll overwrite your color version.</p></li>
+</ul>
+<p>Then run the script.</p>
+</div>
+<div id="creating-files-for-online" class="section level3">
+<h3>Creating files for online</h3>
+<p>The process for making a color png even simplier.</p>
+<p>First, though, comment out the gray scheme line and the PDF ggsave line. You want the graphic to be color and you don’t need to make pdfs anymore.</p>
+<p>Second, uncomment the png ggsave command:</p>
+<p><strong>ggsave(“barPlot.png”, width = 7, height = 6.5, device=“png”, units = c(“in”), dpi = 86, limitsize = FALSE)</strong></p>
+<p>You’ll notice that the <strong>width</strong> is the same for the png than for the pdf, but the dpi is different. That’s because the pdf is for print and the png is for a computer screen. (It’s way more complicated than that.)</p>
+<p>But it does mean you can simply change the <strong>height</strong> to match what you already worked out for the PDF and then run the ggsave command.</p>
+<p>And that’s it. The PNG can be attached as an Asset to your story. The PDF can be placed on a page and size to be two columns.</p>
+</div>
+<div id="important-note" class="section level3">
+<h3>Important note</h3>
+<p>Everyone needs a copy editor. In the process of making graphics, you or your editor might become distracted by something - maybe the graphic is SO COOL that you miss an obvious typo.</p>
+<p>So optimally, we’ll want to create some kind workflow where your editor and/or a copy editor can access the script and data you used to create the chart.</p>
+<p>And, in theory at least, they’ll be trained at least to correct or edit headlines and subheads, maybe even fix problems with the numbers. And then rerun the script to create the corrected charts.</p>
+<p>That will probably take a while. In the meantime, if you are creating charts this way, the onus is on <strong>you</strong> to make sure it’s edited properly.</p>
+<p>Finally, the template called “P00_printTemplate” is an R script you can use as a base to create your files for publication.</p>
+</div>
+<div id="next" class="section level2">
+<h2>Next</h2>
+<p>We’re going to explore the various graphic types ggplot2 has, but first we’re going to have to work the data a bit.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,237 @@
+---
+title: "04_basicLines"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+With line charts, we're going to introduce the idea of creating a space for the plot and then adding elements to it.
+
+You can see why with a basic line plot.
+
+But first we load the readr library and then the dataset.
+
+```{r}
+library(readr)
+df <- read_csv("dfCrime.csv")
+```
+
+Now let's use summary() to remind us of what the data is
+
+```{r}
+summary(df)
+```
+
+Three years with four quarters each of response-to-resistance (RTR) incidents from the Elgin police department. That's broken down by the type of response - show of force only, use of force only and transition - show to use of force.
+
+Now let's plot total RTR incidents as a line plot
+
+```{r}
+
+plot(df$Total_RTR, type="b",
+     xlab = "Year, Quarter", 
+     ylab = "Incidents",
+     main = "Total RTR incidents")
+```
+
+It's a pretty simple graphic, but flawed.
+
+__plot(df\$Total_RTR,__ plots the Total_RTR column.
+
+__type='b'__ tells plot to make this a line chart with dots at the points. All the other items should be obvious.
+
+But look at the axis at the bottom (x axis)! Instead of the year and quarter, it's using the row number of the information. __plot(__ doesn't take the __label=__ command.
+
+The axis on the side - the y axis - isn't great either. It starts at 25, which makes it look like some of the items are near zero if you don't look at the scale. 
+
+So we're going to need to do some design work and build the plot from the ground up. And as long as we're doing that, let's plot the three categories of RTR as separate lines.
+
+The first thing we need to do is figure out the overall size of the plot, and that means we have to figure out the range of values for the x and y axis. And the command we'll use to do that is called __range__
+
+For the x axis, we'll want to know the number of rows. We want a start number which we can supply and an end number, which we find out using __NROW__ which counts the number of rows in a column.
+
+```{r}
+xrange <- range(1,NROW(df$Year_Quarter))
+xrange
+```
+
+Next for the y axis, we need to figure out the highest value out of all three of the columns we want to plot. 
+
+Range takes care of that for us. We just need to supply the starting point (0) and then supply the three columns. Range finds the highest number out of the three.
+
+```{r}
+xrange <- range(1,NROW(df$Year_Quarter))
+yrange <- range(0,df$SOF_only,df$UOF_only,df$Transitions)
+yrange
+```
+
+Now we can plot, using the values in xrange and yrange to set the size of the plot area.
+
+```{r}
+xrange <- range(1,NROW(df$Year_Quarter))
+yrange <- range(0,df$SOF_only,df$UOF_only,df$Transitions)
+plot(xrange, yrange, type="n", axes=FALSE,
+     xlab = "Year, Quarter", ylab = "Incidents",
+     main = "Total RTR incidents")
+```
+
+The only things you see are the labels. We told R not to plot with __type='n'__ and set axes to False.
+
+So now we can add each line individualy.
+
+```{r}
+xrange <- range(1,NROW(df$Year_Quarter))
+yrange <- range(0,df$SOF_only,df$UOF_only,df$Transitions)
+plot(xrange, yrange, type="n", axes=FALSE,
+     xlab = "Year, Quarter", ylab = "Incidents",
+     main = "Total RTR incidents")
+lines(df$SOF_only, 
+      type = "b", 
+      pch=19, 
+      col = "orange", 
+      lwd=2)
+lines(df$UOF_only, 
+      type = "b", 
+      pch=17, 
+      col = "blue", 
+      lwd=2)
+lines(df$Transitions, 
+      type = "b", 
+      pch=15, 
+      col = "darkgreen", 
+      lwd=2)
+```
+
+__lines(__ adds a line to the plot, based on values from the column we specify.
+
+__type='b'__ specifies a line with a dot.
+
+__pch=19__ indicates what type of symbol we want. 19 is a solid circle. Use ?pch to see other symbols.
+
+__lwd__ is line weight. Default is 1, but we made our lines thicker.
+
+Now let's add the x axis
+
+```{r}
+xrange <- range(1,NROW(df$Year_Quarter))
+yrange <- range(0,df$SOF_only,df$UOF_only,df$Transitions)
+plot(xrange, yrange, type="n", axes=FALSE,
+     xlab = "Year, Quarter", ylab = "Incidents",
+     main = "Total RTR incidents")
+lines(df$SOF_only, 
+      type = "b", 
+      pch=19, 
+      col = "orange", 
+      lwd=2)
+lines(df$UOF_only, 
+      type = "b", 
+      pch=17, 
+      col = "blue", 
+      lwd=2)
+lines(df$Transitions, 
+      type = "b", 
+      pch=15, 
+      col = "darkgreen", 
+      lwd=2)
+axis(1, las=1, at=1:xrange[2], 
+     tck = .05,
+     lab=c("1Q\n2014","2Q\n","3Q\n","4Q\n","1Q\n2015","2Q\n","3Q\n","4Q\n","1Q\n2016","2Q\n","3Q\n","4Q\n") )
+```
+
+We're getting into design here, but a lot of doing graphics involves design.
+
+__axis(1,__ adds the x axis. For the y, we'll use 2. 
+
+__las=1__ makes the labels horizontal.
+
+__at=1:xrange[2],__ at= tells it where to put tick marks. We start at the first position and go to the highest number in our xrange. Xrange has only two numbers in it, so ask the second one.
+
+__tck = .05,__ Sets the size of the ticks. In this case, they're short.
+
+__lab=c(__ Here we got a little fancy. If we tried to put all the labels in, they'd run into each other. But we need something for each of the 12 ticks. So we label the first tick __1Q__ then a line break slash "N" then the year __2014__. For 2Q-4Q, it's just the quarter then the line break so the label is flush with the line.
+
+Now let's add the y axis
+
+```{r}
+xrange <- range(1,NROW(df$Year_Quarter))
+yrange <- range(0,df$SOF_only,df$UOF_only,df$Transitions)
+plot(xrange, yrange, type="n", axes=FALSE,
+     xlab = "Year, Quarter", ylab = "Incidents",
+     main = "Total RTR incidents")
+lines(df$SOF_only, 
+      type = "b", 
+      pch=19, 
+      col = "orange", 
+      lwd=2)
+lines(df$UOF_only, 
+      type = "b", 
+      pch=17, 
+      col = "blue", 
+      lwd=2)
+lines(df$Transitions, 
+      type = "b", 
+      pch=15, 
+      col = "darkgreen", 
+      lwd=2)
+axis(1, las=1, at=1:xrange[2], 
+     tck = .05,
+     lab=c("1Q\n2014","2Q\n","3Q\n","4Q\n","1Q\n2015","2Q\n","3Q\n","4Q\n","1Q\n2016","2Q\n","3Q\n","4Q\n") )
+axis(2, las=1, at=5*0:yrange[2], tck = 1, lty=3)
+```
+
+__axis(2__ sets up the y axis, __las=1__ makes sure the text labels are horizontal.
+
+__at\+5\*0:yrange[2]__ starts the ticks at 0 and counts them by 5 to the top of the __yrange[2]__
+
+__tck=1__ has the line go all the way across
+
+__lty__ is the line type, in this case dots.
+
+Finally, let's add a legend
+
+```{r}
+xrange <- range(1,NROW(df$Year_Quarter))
+yrange <- range(0,df$SOF_only,df$UOF_only,df$Transitions)
+plot(xrange, yrange, type="n", axes=FALSE,
+     xlab = "Year, Quarter", ylab = "Incidents",
+     main = "Total RTR incidents")
+lines(df$SOF_only, 
+      type = "b", 
+      pch=19, 
+      col = "orange", 
+      lwd=2)
+lines(df$UOF_only, 
+      type = "b", 
+      pch=17, 
+      col = "blue", 
+      lwd=2)
+lines(df$Transitions, 
+      type = "b", 
+      pch=15, 
+      col = "darkgreen", 
+      lwd=2)
+axis(1, las=1, at=1:xrange[2], 
+     tck = .05,
+     lab=c("1Q\n2014","2Q\n","3Q\n","4Q\n","1Q\n2015","2Q\n","3Q\n","4Q\n","1Q\n2016","2Q\n","3Q\n","4Q\n") )
+axis(2, las=1, at=5*0:yrange[2], tck = 1, lty=3)
+legend(1, yrange[2], 
+       c("SOF Only", "UOF only", "Transition"), 
+       cex=0.8, 
+       col=c("Orange","blue","darkgreen"), 
+       pch=c(19,17,15), lwd=2)
+```
+
+Now we have the complete plot. 
+
+__legend(1,yrange[2]__ legend is the command, 1 is the x position, yrange[2] is the y postion. So top left.
+
+The next commands should be understandable. 
+
+Basic plots are OK, but we had to go to some lengths to get a decent looking line chart. When we start working with ggplot2, it should be a lot easier.

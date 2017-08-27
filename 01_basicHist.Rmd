@@ -1,0 +1,282 @@
+---
+title: "01_basicHist"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Interview the data
+"Interviewing your data" is a concept introduced through Investigative Reporters and Editors, an organization I highly recommend you look into.
+
+It means you're using code to ask questions about the nature of the data. The data set we'll mostly be using isn't very large so this step isn't going to be very challenging. 
+
+But it will be the longest of these guides.
+
+We'll be working with three years of data from the Elgin police department, each year having four quarters, so a total of 12 rows of information. The data itself looks at their use of physical force in response to resistance, use of stun guns and use of handguns. It includes stats on officer and suspect injuries, and overall numbers on arrests.
+
+
+_Let's take a moment to point out that - for a reporter - none of this is a replacement for talking with people. Any dataset should simply be one source of information out of many that you use for a story._
+
+_And you need to be thinking critically about the data like any source. For instance, there's no geographical data associated in the data. That means we can't map any of this. It doesn't necessarily mean someone's trying to hide anything, but not having something that potentially describes the data in a certain way is like making an entire topic off limits at a press conference._ 
+
+The first step is to bring your data into R and to do that we'll need to load in a library. 
+
+```{r}
+library(readr)
+```
+
+In this case the readr package is a bit like using a jackhammer to drive a nail, but it's a good package to know about.
+
+Now read in the data using read_csv, storing it in a dataframe called "elgCrime"
+```{r}
+elgCrime <- read_csv("ElginUOF.csv")
+```
+
+Very quickly, here's a number of ways you can examine the nature of the dataset
+
+```{r}
+ls() # lists all the datasets loaded in your R studio
+class(elgCrime) # Tells us the data is in a dataframe
+dim(elgCrime) # finds number of rows and columns
+nrow(elgCrime) # finds number of rows
+ncol(elgCrime) # finds number of columns
+object.size(elgCrime) # size of the data set in memory used
+```
+
+All these are useful at the start - if you're expecting information about the 108 counties in Illinois but your dataset only has 103 rows, there's something wrong.
+
+A quick techinical note about object.size: Many programs will use the harddrive to supplement the memory of your computer. R doesn't do that. So if you're working with a big file but only have 2 gigs of memory, things might run slow - or not at all. So object.size is a good way to test if a file is going to be problematic.
+
+There's a few ways to look at the data itself. The first is in R studio, where under the Environment tab you can click on "elgCrime" and see a sortable table much like Excel (expect you can't select and edit).
+
+When the data is too big, you would use these commands
+
+```{r}
+names(elgCrime) # returns vector of column names
+head(elgCrime) # looks at first six columns (with column names)
+tail(elgCrime) # looks at the last six columns (with column names)
+```
+
+With head and tail, you can also specify the number of rows you want to see
+```{r}
+head(elgCrime, 10) # looks at first 10 rows
+tail(elgCrime, 5) # looks at athe last 5 rows
+```
+
+The program that generates these guide files doesn't show all the columns, but you'll see them all in your R Studio console window.
+
+There are other commands but here's a great way to look at the data
+
+```{r}
+summary(elgCrime)
+```
+
+Summary is dead useful. For each column (where possible), it automatically gives you the minimum number, the number at the first quartile (25% point), the median and mean, the number at the third quartile (75%) and finally the maximum number.
+
+For instance, right away we see that Elgin police haven't fired their guns in the three years the data covers.
+
+The only drawback is it's hard to view in the console if you have a lot of columns. There's a simple way of storing the result of summary into a dataframe viewable by clicking on it in the Environment tab.
+
+```{r}
+sumElg <- do.call(cbind, lapply(elgCrime, summary))
+```
+
+This is one of those "just turn the door knob" moments. You only need to put the name of your dataframe in ... lapply(NAME, summary)) ... and assign it to a dataframe ... sumElg <- ...
+
+Now you can view it whenever you want in an easily scrollable format by clicking on it in the Environment tab.
+
+## Grabbing the data we want
+
+Now that we have a better understanding of everything, let's grab a slice of the dataset to look at more closely. Let's focus just on the Response to Resistance data, which includes total RTR incidents or incidents that involved police showing or using physical techniques to respond instead of a weapon like a taser or gun. These are broken down into three parts: Show of force only, Use of force only and then incidents that transitioned from Show to Use of force (total transitions).
+
+But first, I don't like that we have the year and the quarter in the same column. I'd like to also have a column with just the year and one with just the quarter. Here's how we do that:
+
+Let's sort the dataframe in ascending order by year/quarter
+```{r}
+elgCrime[order(elgCrime$Year_Quarter),]
+```
+
+Alternatively, here's how you would sort decending order
+elgCrime[order(elgCrime$Year_Quarter, decreasing=TRUE),]
+
+Next we're going to grab the first four letters in the year/quarter column and put them in a column called year using the command "substr."
+
+```{r}
+elgCrime$year <- as.numeric(as.character( substr(elgCrime$Year_Quarter, start=1, stop=4) ))
+```
+
+The command "as.numeric(as.character( ..." that wraps around the substr commmand takes those four letters and tells R that we want them considered a number, not a string.
+
+We don't have to do that with quarter since it has a mix of letters and numbers (Q1, Q2 etc)
+
+```{r}
+elgCrime$quarter <- substr(elgCrime$Year_Quarter, start=6, stop=7)
+```
+
+If you look at elgCrime now, you'll see two new columns at the end
+summary(elgCrime)
+
+Now let's grab just the columns we want:
+
+```{r}
+dfCrime <- elgCrime[,c("Year_Quarter","year","quarter","Total_CFS","Total_arrests","Total_RTR_incidents","SOF_only","UOF_only","Total_transitions")]
+```
+
+We take a list of the columns we want in elgCrime and put them into a dataframe called dfCrime.
+
+Some of the column names are long, and we'll be working with them so let's shorten them
+
+```{r}
+names(dfCrime)[names(dfCrime)=="Total_RTR_incidents"] <- "Total_RTR"
+names(dfCrime)[names(dfCrime)=="Total_transitions"] <- "Transitions"
+```
+
+Let's save it as a csv file as we'll be using it extensively.
+
+```{r}
+write_csv(dfCrime,"dfCrime.csv")
+```
+
+We just did a lot. Take a moment and click on dfCrime and elgCrime in the Environnment tab. Compare the two and it should help you understand how we got here.
+
+## First visualization
+
+###Let's make a histogram
+
+```{r}
+hist(dfCrime$Total_RTR, breaks=10, main="Histogram", col="green")
+```
+
+A histogram may look like a bar chart, but it's different. A bar chart will show the number of things in a category, like the number of incidents in the first quarter of 2014 versus the number in the second. And we'll make a bar chart like that in another file.
+
+A histogram shows how often (frequency) a value appears. In this case, we know we have 12 numbers or values in the Total_RTR column. We also know, from using summary(), that the minimum number out of that 12 is "25" and the maximum is "56."
+
+So a histogram counts the number of times a value shows up between 25 and 56. For instance, we can see there four values between 30 and 35 in our dataset.
+
+Not a big deal with such a small dataset. Very useful when you're working with a large dataset like campaign contributions.
+
+Play around with the number of breaks - it's not always going to change. Histogram automatically rounds the number of breaks to the next best number. 2 will work, 3 gets you four bars, 5 gets you seven bars and so on.
+
+###Density
+
+A density plot is another kind of histogram, except it has a smooth line.
+
+First we get the density and put in a variable 'd.' (you can call it anything you want)
+
+```{r}
+d <- density(dfCrime$Total_RTR) 
+d
+```
+
+You can see the distribution between Min and Max is different than the one in Summary(). That's because density is trying to use the data to generate a smooth line.
+
+Generally, bandwidth shows how much there is at that point. Feel free to google "R density plots bandwidth" to learn more.
+
+Now let's use d to plot
+
+```{r}
+plot(d, main="Total RTR incidents") 
+polygon(d, col=rgb(1, 0, 0, 0.5), border="red") 
+```
+
+__plot__ takes the information in d and generates the density chart. __main__ adds a title.
+
+__polygon__ formats the plot, making the line red and filling it with red: col=rgb(red,green,blue...
+
+The last number is the alpha or opacity of the polygon. The value could be from 0 (0% or transparent) to 1 (100%). This is at 0.5, so it's 50%.
+
+As to the result, you can see it mirrors the histogram.
+
+#### Density by year
+
+That's all good, but in our data there's a factor that we can use to group and compare portions of our data: year.
+
+BTW: remember that word _factor_. It's something that will come up a lot when making graphics and maps in R.
+
+We need to load in the library called "sm." You may need to install it first.
+
+```{r}
+library(sm)
+```
+
+Now let's see how many years we have. We know there's only three in this set.
+
+```{r}
+listF <- as.factor(dfCrime$year)
+listF
+```
+
+__as.factor__ gives us all the groups it finds. We put that in the variable _listF_ in case we want refer to it later.
+
+Let's generate the plot and then go through the code:
+
+```{r}
+sm.density.compare(dfCrime$Total_RTR, 
+                   dfCrime$year, 
+                   xlab="Total RTR incidents", 
+                   ylim= c(0,0.08))
+title(main="Response to Resistance by year")
+RTRyears <- factor(dfCrime$year, 
+                   levels= c("2014","2015","2016"), 
+                   labels = c("2014", "2015", "2016")
+                   )
+colfill<-c( 2:( 2+length( levels(RTRyears) ) ) )
+legend( "topright", 
+        levels(RTRyears), 
+        fill=colfill )
+```
+
+First, look at the overall way the code is laid out. 
+
+* This is five lines of code
+
+* To make it easier to read, we take longer lines and break them up into multiple lines by hitting "return" in places it makes sense to do so, like after a comma. R Studio knows to indent that for us.
+
+* Each line of code adds something to the plot - that's something to get used to with R, starting a plot and adding features to it. You could stop with the first line: sm.density.compare... and it would OK. But you wouldn't have a title or a legend to help you.
+
+Now let's look at each line of code so you understand how to use it.
+
+__sm.density.compare( __ is the command that sets up the plot
+
+__dfCrime$Total_RTR,__ is the column in the data we want to use. Needs to be followed by a comma.
+ 
+__dfCrime$year,__ is the _factor_ we want to compare by. It will automatically go in group the rows by the common factors - in this case year. If there are 100 rows for the year 2014 and 35 rows for the year 2015, it will grab those 100 rows and make them a different group from the 35 rows. Don't forget the comma.
+ 
+__xlab="Total RTR incidents",__ this just adds a label for the x axis, the bottom axis of the chart. The y axis is always the vertical axis.
+
+__ylim= c(0,0.08))__ This sets the range for the y axis, mostly for aesthetic reasons. We want the plot to be high enough, with empty space on top, so the legend doesn't run into the lines. 
+
+You can probably figure out what title does.
+
+The next three lines format and add the legend to the plot. This is the kind of code you don't necessarily have to know a lot about right now - you can pick it up and modify things as needed. 
+
+__RTRyears <- factor(dfCrime$year,__ creates a variable _RTRyears_ and adds the years factors to it. _levels_ is a list of the factor levels that we got from _listF_, and _labels_ is the text that we want to correspond to those levels. Try changing the labels and see what happens. 
+
+__colfill<-c( 2:( 2+length( levels(RTRyears) ) ) )__ formats the little boxes that go next to the labels.
+
+__legend( "topright", __ places the legend in the plot at the top, right corner. _topleft_ would put it at the top, left corner etc. _levels_ adds the levels we set up in _RTRyears_ and _fill_ adds the boxes we set up in _colfill_.
+
+R keeps track of things for us, automatically assigning colors to the legend in the same order as it assigned them to the lines in the plot.
+
+And what we see here is pretty useful:
+
+* 2014 had the highest amount of the lowest values.
+
+* Most of the values in 2015 were pretty close to 2014, but had at least one higher value.
+
+* 2016's values were all higher than 2014, and higher than all but that one bump in 2016.
+
+Again, we're working with a small dataset where each year has only 4 values. Imagine if each year had hundreds of values...
+
+## Final thoughts
+
+This was a long exercise, probably the longest of these guides. Feel free to play around with the data and code - try selecting other portions of the data and make histograms and density charts.
+
+The more you work with this, the easier it gets.

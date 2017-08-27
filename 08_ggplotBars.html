@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>08_ggplotBars</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making graphics with R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="00_Navigation.html">00_Navigation</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">08_ggplotBars</h1>
+
+</div>
+
+
+<div id="building-a-bar-chart-with-ggplot2" class="section level1">
+<h1>Building a bar chart with ggplot2</h1>
+<p>We’re going to build a bar chart using ggplot2 showing the total RTR incidents by quarter. “Build” is the right word to use, because we’re going to start with something simple and build to something that’s just about publication ready.</p>
+<p>Publication ready means the chart is designed and sized appropriately for where it will appear. Ggplot2 makes this easier, but there’s still some work needed by you.</p>
+<p>Let’s start by loading in the libraries and data we need.</p>
+<pre class="r"><code>library(readr)
+library(ggplot2)
+library(ggthemes)
+
+df &lt;- read_csv(&quot;dfCrime.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Year_Quarter = col_character(),
+##   year = col_integer(),
+##   quarter = col_character(),
+##   Total_CFS = col_integer(),
+##   Total_arrests = col_integer(),
+##   Total_RTR = col_integer(),
+##   SOF_only = col_integer(),
+##   UOF_only = col_integer(),
+##   Transitions = col_integer()
+## )</code></pre>
+<pre class="r"><code>summary(df)</code></pre>
+<pre><code>##  Year_Quarter            year        quarter            Total_CFS    
+##  Length:12          Min.   :2014   Length:12          Min.   :18178  
+##  Class :character   1st Qu.:2014   Class :character   1st Qu.:19663  
+##  Mode  :character   Median :2015   Mode  :character   Median :21544  
+##                     Mean   :2015                      Mean   :21341  
+##                     3rd Qu.:2016                      3rd Qu.:22753  
+##                     Max.   :2016                      Max.   :24715  
+##  Total_arrests      Total_RTR        SOF_only        UOF_only    
+##  Min.   : 889.0   Min.   :25.00   Min.   : 6.00   Min.   :15.00  
+##  1st Qu.: 947.8   1st Qu.:32.00   1st Qu.: 9.75   1st Qu.:16.00  
+##  Median : 994.5   Median :35.50   Median :12.00   Median :19.50  
+##  Mean   :1013.2   Mean   :39.67   Mean   :11.67   Mean   :21.92  
+##  3rd Qu.:1046.2   3rd Qu.:50.50   3rd Qu.:13.25   3rd Qu.:25.75  
+##  Max.   :1246.0   Max.   :56.00   Max.   :19.00   Max.   :35.00  
+##   Transitions    
+##  Min.   : 2.000  
+##  1st Qu.: 3.000  
+##  Median : 6.500  
+##  Mean   : 6.083  
+##  3rd Qu.: 8.000  
+##  Max.   :12.000</code></pre>
+<p>Let’s create a basic bar chart</p>
+<pre class="r"><code>basebar &lt;- ggplot(df) + 
+  aes(x = Year_Quarter, 
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat=&quot;identity&quot;) + 
+  coord_flip()
+basebar</code></pre>
+<p><img src="08_ggplotBars_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>And that’s it. That’s all you need to do to create a bar chart. Everything after this bit of code is about the design of the chart - colors, labels, headlines and such.</p>
+<p>Here’s what the code does:</p>
+<p><strong>basebar &lt;-</strong> is the variable that stores the chart commands. This way we’re not generating charts in the plot window until we call it.</p>
+<p><strong>ggplot(df) +</strong> calls ggplot and tells it what dataframe to use.</p>
+<p><strong>aes(x = Year_Quarter, y = Total_RTR, fill = factor(year)) + </strong> <em>aes</em> generally stands for aesthetics. Going forward, it’s kind of the catch-all place to put a bunch of information. In this case, we’re telling ggplot that we want our X axis to be the Year_Quarter column and the Y axis to be Total_RTR. We’re going to start a bit fancy and have the bars colored by year, using <em>fill =</em> and setting <em>year</em> as a factor. If you recall, factors group common things in the year column together.</p>
+<p><strong>geom_bar(stat=“identity”)</strong> tells ggplot that we want to plot the values in Total_RTR, not count up the different values to make a histogram.</p>
+<p><strong>coord_flip()</strong> makes it a horizontal chart instead of vertical.</p>
+<p>Right away, there’s a problem: The bars are sorted by the Year_Quarter column, but 2016 4Q is at the top and 2014 1Q is at the bottom. You want to have people read charts left-to-right and top-to-bottom. Unfortunately we can’t just have ggplot reverse the order - we have to give ggplot something to sort by. Here’s how we’ll do that:</p>
+<pre class="r"><code>df &lt;-df[order(df$Year_Quarter),]
+df$sort &lt;- seq.int(nrow(df)) 
+head(df)</code></pre>
+<pre><code>## # A tibble: 6 x 10
+##   Year_Quarter  year quarter Total_CFS Total_arrests Total_RTR SOF_only
+##          &lt;chr&gt; &lt;int&gt;   &lt;chr&gt;     &lt;int&gt;         &lt;int&gt;     &lt;int&gt;    &lt;int&gt;
+## 1      2014 1Q  2014      1Q     19217           989        32       12
+## 2      2014 2Q  2014      2Q     21265          1178        25        7
+## 3      2014 3Q  2014      3Q     21994          1246        36       11
+## 4      2014 4Q  2014      4Q     18182          1047        28        6
+## 5      2015 1Q  2015      1Q     18178          1014        34       10
+## 6      2015 2Q  2015      2Q     19812           929        32        9
+## # ... with 3 more variables: UOF_only &lt;int&gt;, Transitions &lt;int&gt;, sort &lt;int&gt;</code></pre>
+<p><strong>df[order(df$Year_Quarter),]</strong> This simply sorts the dataframe df by the column Year_Quarter. If you look at df at this point, you’ll see it’s sorted with 2014 1Q at top. If you wanted to sort it in the opposite way, you would use <em>-order[<em>. That trailing comma </em>,]</em> is important.</p>
+<p>It would be great if ggplot respected that, but no. So we have to record the order that we want.</p>
+<p><strong>df$sort&lt;-seq.int(nrow(df))</strong> creates a new column <em>df$sort</em> and puts the number of each row <em>seq.int(nrow(df))</em> into that column.</p>
+<p>Look at the first six rows of the dataframe using <strong>head(df)</strong>. On the very far left, you can see the row number. Now look at the <em>sort</em> column and you can see we’ve stored that number there.</p>
+<p>Now let’s use that to sort our bar chart.</p>
+<pre class="r"><code>basebar &lt;- ggplot(df) + 
+  aes(x = reorder(Year_Quarter, -sort), # Sort
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat=&quot;identity&quot;) + 
+  coord_flip()
+basebar</code></pre>
+<p><img src="08_ggplotBars_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><strong>x=reorder(Year_Quarter,-sort),</strong> tells ggplot to reorder the X axis. We first give the column we want ggplot to use for X (Year_Quarter) then tell it what to reorder by: -sort. Try using just “sort” instead of “-sort” to see what happens.</p>
+<p>This is nice, but let’s add some descriptive text.</p>
+<pre class="r"><code>basebar &lt;- ggplot(df) + 
+  aes(x = reorder(Year_Quarter, -sort), 
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat=&quot;identity&quot;) + 
+  coord_flip()
+
+# add all the titles.
+basebar &lt;- basebar + labs(
+  title=&quot;Response to resistance&quot;,
+  subtitle=&quot;Elgin police have increased their use of\nnon-lethal force in response to resistance.&quot;,
+  x=&quot;YEAR, QUARTER&quot;, 
+  y=&quot;RESPONSE TO RESISTANCE INSTANCES&quot;,
+  caption=&quot;\nSource: Elgin police&quot;)
+basebar</code></pre>
+<p><img src="08_ggplotBars_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><strong>basebar &lt;- basebar + labs(</strong> Here we’re building up our graphic. We’re saying take <strong>basebar</strong> and add <strong>+ labs(</strong>, or labels to it and store it in <strong>basebar &lt;-</strong>. That can be a bit confusing, but it makes sense when you say it like this: Basebar now equals whatever we did before plus all this new stuff.</p>
+<p>Every thing else should be obvious, but I want to point out that we need to put in line breaks with “\n”, otherwise the text just keeps going. Sometimes you’ll have to put in a line break, run the plot and then adjust it again.</p>
+<p>Next, we don’t need a legend so let’s just remove it.</p>
+<pre class="r"><code>basebar &lt;- ggplot(df) + 
+  aes(x = reorder(Year_Quarter, -sort), 
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat=&quot;identity&quot;) + 
+  coord_flip()
+
+basebar &lt;- basebar + labs(
+  title=&quot;Response to resistance&quot;,
+  subtitle=&quot;Elgin police have increased their use of\nnon-lethal force in response to resistance.&quot;,
+  x=&quot;YEAR, QUARTER&quot;, 
+  y=&quot;RESPONSE TO RESISTANCE INSTANCES&quot;,
+  caption=&quot;\nSource: Elgin police&quot;)
+
+# Remove lengend
+basebar &lt;- basebar + theme(legend.position=&quot;None&quot;)
+
+basebar</code></pre>
+<p><img src="08_ggplotBars_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>The labels on the side are kind of repetative. Let’s substitute them with something that highlights the year.</p>
+<pre class="r"><code>basebar &lt;- ggplot(df) + 
+  aes(x = reorder(Year_Quarter, -sort), 
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat=&quot;identity&quot;) + 
+  coord_flip()
+
+basebar &lt;- basebar + labs(
+  title=&quot;Response to resistance&quot;,
+  subtitle=&quot;Elgin police have increased their use of\nnon-lethal force in response to resistance.&quot;,
+  x=&quot;YEAR, QUARTER&quot;, 
+  y=&quot;RESPONSE TO RESISTANCE INSTANCES&quot;,
+  caption=&quot;\nSource: Elgin police&quot;)
+
+basebar &lt;- basebar + theme(legend.position=&quot;None&quot;)
+
+# Better x labels
+basebar &lt;- basebar + scale_x_discrete(
+  labels=c(&quot;4Q&quot;,&quot;3Q&quot;,&quot;2Q&quot;,&quot;2016 1Q&quot;,&quot;4Q&quot;,&quot;3Q&quot;,&quot;2Q&quot;,&quot;2015 1Q&quot;,&quot;4Q&quot;,&quot;3Q&quot;,&quot;2Q&quot;,&quot;2014 1Q&quot;)
+)
+
+basebar</code></pre>
+<p><img src="08_ggplotBars_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Remember, we’ve flipped the X and Y axis, but the X axis is still the X axis. And, we’ve resorted the Year_Quarter column but we still have to assign the new labels as if we didn’t. That’s why they’re in reverse order in <strong>scale_x_discrete(labels=c(</strong></p>
+<p>We’re really getting close to a publishable plot! Now we’re going to do something very tricky: Let’s put the value of each bar on the bar itself.</p>
+<pre class="r"><code>basebar &lt;- ggplot(df) + 
+  aes(x = reorder(Year_Quarter, -sort), 
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat=&quot;identity&quot;) + 
+  coord_flip()
+
+basebar &lt;- basebar + labs(
+  title=&quot;Response to resistance&quot;,
+  subtitle=&quot;Elgin police have increased their use of\nnon-lethal force in response to resistance.&quot;,
+  x=&quot;YEAR, QUARTER&quot;, 
+  y=&quot;RESPONSE TO RESISTANCE INSTANCES&quot;,
+  caption=&quot;\nSource: Elgin police&quot;)
+
+basebar &lt;- basebar + theme(legend.position=&quot;None&quot;)
+
+basebar &lt;- basebar + scale_x_discrete(
+  labels=c(&quot;4Q&quot;,&quot;3Q&quot;,&quot;2Q&quot;,&quot;2016 1Q&quot;,&quot;4Q&quot;,&quot;3Q&quot;,&quot;2Q&quot;,&quot;2015 1Q&quot;,&quot;4Q&quot;,&quot;3Q&quot;,&quot;2Q&quot;,&quot;2014 1Q&quot;)
+)
+
+# add values to the bars
+basebar &lt;- basebar + geom_text(
+  position = &quot;stack&quot;, 
+  aes(x = Year_Quarter, 
+      y = Total_RTR - (Total_RTR * 0.025), 
+      hjust = 1,
+      label = Total_RTR),
+  size=5,
+  fontface=&quot;bold&quot;,
+  color=&quot;white&quot;
+  )
+
+basebar</code></pre>
+<p><img src="08_ggplotBars_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>What we’re doing with <strong>geom_text</strong> is</p>
+<ul>
+<li><p>put the value of each bar on top of the bar</p></li>
+<li><p>place it all the way at the end of the bar minus a little bit so it’s kind of offset from the end</p></li>
+<li><p>size the text and make it bold and white</p></li>
+</ul>
+<p>This is one of those things you don’t have to understand to use, so we won’t go over it. But take some time to look it over and understand as it’ll be reused in later plots.</p>
+<p>At this point we’ve got a pretty good looking plot. Let’s do one more thing to make it ready to go: style elements.</p>
+<p>We’re going to do that by creating a function that uses a theme from the ggthemes library (538, modeled after the statistics website) with some modifications that make it useful for our publication purposes.</p>
+<p>Let’s look at the final plot:</p>
+<pre class="r"><code>#---------------------
+
+# This function set styles for the chart
+# Be sure to run it before you plot
+
+theme_gfx &lt;- function(...) {
+  theme_set(theme_get() + theme(text = element_text(family = &#39;Verdana&#39;, size= 12, lineheight=0.9))) + 
+    theme(
+      # edit background colors
+      plot.background = element_blank(),
+      legend.background = element_blank(),
+      panel.background=element_rect(fill=&quot;#E5E5E5&quot;),
+      strip.background=element_rect(fill=&quot;#E5E5E5&quot;),
+      # modify grid and tick lines
+      panel.grid.major = element_line(size = .6, color=&quot;#D2D2D2&quot;),
+      panel.grid.minor = element_line(size = .6, color=&quot;#D2D2D2&quot;, linetype = &quot;dashed&quot;),
+      axis.ticks = element_blank(),
+      # edit font sizes
+      plot.title = element_text(size = 27,face=&quot;bold&quot;),
+      plot.subtitle = element_text(size = 18),
+      legend.title=element_text(size = 13,face=&quot;bold&quot;),
+      legend.text=element_text(size=14.7),
+      axis.title=element_text(size=15, face=&quot;bold&quot;),
+      axis.text=element_text(size=13.5),
+      plot.caption=element_text(size=13.5, hjust=0),
+      strip.text = element_text(face=&quot;bold&quot;, size=13.5, hjust=0),
+      # This puts the legend across the top
+      legend.position=&quot;top&quot;, 
+      legend.direction=&quot;horizontal&quot;,
+      # removes label for legend
+      #legend.title = element_blank(),
+      ...
+    )
+}
+
+#-----Insert plot here -------------
+
+basebar &lt;- ggplot(df) + 
+  aes(x = reorder(Year_Quarter, -sort), 
+      y = Total_RTR, 
+      fill = factor(year)) +
+  geom_bar(stat=&quot;identity&quot;) + 
+  coord_flip() + theme_gfx() # add the theme
+
+# add all the titles.
+basebar &lt;- basebar + labs(
+  title=&quot;Response to resistance&quot;,
+  subtitle=&quot;Elgin police have increased their use of\nnon-lethal force in response to resistance.&quot;,
+  x=&quot;YEAR, QUARTER&quot;, 
+  y=&quot;RESPONSE TO RESISTANCE INSTANCES&quot;,
+  caption=&quot;\nSource: Elgin police&quot;)
+
+# Remove lengend
+basebar &lt;- basebar + theme(legend.position=&quot;None&quot;)
+
+# Better x labels
+basebar &lt;- basebar + scale_x_discrete(
+  labels=c(&quot;4Q&quot;,&quot;3Q&quot;,&quot;2Q&quot;,&quot;2016 1Q&quot;,&quot;4Q&quot;,&quot;3Q&quot;,&quot;2Q&quot;,&quot;2015 1Q&quot;,&quot;4Q&quot;,&quot;3Q&quot;,&quot;2Q&quot;,&quot;2014 1Q&quot;)
+)
+
+# add values to the bars
+basebar &lt;- basebar + geom_text(
+  position = &quot;stack&quot;, 
+  aes(x = Year_Quarter, 
+      y = Total_RTR - (Total_RTR * 0.025), 
+      hjust = 1,
+      label = Total_RTR),
+  family=&quot;Verdana&quot;, # set the font family
+  size=5,
+  fontface=&quot;bold&quot;,
+  color=&quot;white&quot;
+  )
+
+# Add a color scheme for the chart
+basebar &lt;- basebar + scale_colour_manual( values = c(&quot;#0063A5&quot;, &quot;#DE731D&quot;, &quot;#009964&quot;, &quot;#DA2128&quot;, &quot;#6F2C91&quot;) ) + scale_fill_manual( values = c(&quot;#0063A5&quot;, &quot;#DE731D&quot;, &quot;#009964&quot;, &quot;#DA2128&quot;, &quot;#6F2C91&quot;) )
+
+basebar</code></pre>
+<p><img src="08_ggplotBars_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>#----- End plot --------------</code></pre>
+<p>Now we have bold and upsized headlines. All the text is sized to work for online and print.</p>
+<p>(If you’re working with the R script, you should click on the “zoom” button in the plot window to best see the results.)</p>
+<p>I’m not going to spend a lot of time going over the function. For it to be applied to the graphic, you have to control-return it first.</p>
+<p>Then simply add <strong>theme_gfx()</strong> to the graphic.</p>
+<p>This style for the graphic is one we’ll use in the future. At some point we may tweak it and store it as a local library that needs to be loaded in to your R scripts. But for now, it’ll be one of the things at the top of each file.</p>
+<p>Not included here is the <strong>windowsFonts</strong> line. It’s necessary for windows computers to recognize the font we want to use. It’ll throw an error on Mac computers, but that can be ignored.</p>
+<p>We’ve also set the font family for the bar labels, and added a new color scale with <strong>scale_colour_manual</strong> and <strong>scale_fill_manual(</strong></p>
+<p>Please feel free to explore more, either by typing ?theme or googling “ggplot2 theme.”</p>
+<p>For now, though, we have a publication-ready graphic. Next we’ll see how to create the files needed for publication.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

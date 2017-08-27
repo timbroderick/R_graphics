@@ -1,0 +1,220 @@
+---
+title: "07_qplot"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction to ggplot2
+
+Up until now we've been using R's basic plots to make visualizations. They're OK, but frankly they can be clunky to put together and the overall design is rather basic.
+
+Fortunately, someone in the R open source community agreed and came up with the ggplot2 library for graphics. 
+
+If you'd like to delve deeper into it, here's the book by the author of the library: http://ms.mcmaster.ca/~bolker/misc/ggplot2-book.pdf
+
+It's available for purchase, but he's open-sourced the pdf.
+
+ggplot2 takes care of a lot of design problems so that we can create publication-ready graphics for print and online. And that's not an easy problem to solve.
+
+It also provides a replacement to many of the basic plots that we've explored in the form of "qplot." q (or quick) plots are meant to be quick visualizations that you use to understand your data in advance of creating a final visualization. 
+
+Put it this way: R is used by professionals like sociologists and medical doctors who do complex studies and generate a lot of data. There are specialized libraries like "Array Based CpG Region Analysis Pipeline" that concerns just a single region of dna.
+
+These professionals need to visualize their data for themselves, and then generate professional-looking plots for their publications. qplots are the kind of thing they do for themselves, the full ggplot2 graphic is the kind of thing they submit for publication. 
+
+Let's take a look at our data using qplot. There's a good introduction here: http://www.statmethods.net/advgraphs/ggplot2.html
+
+First, let's load in the libraries and data.
+
+```{r}
+library(readr)
+library(ggplot2)
+library(ggthemes)
+
+df <- read_csv("dfCrime.csv")
+
+summary(df)
+```
+
+Three years with four quarters each of response-to-resistance (RTR) incidents from the Elgin police department. That's broken down by the type of response - show of force only, use of force only and transition - show to use of force.
+
+## Histograms
+
+qplot makes it easy to generate histograms
+
+```{r}
+qplot(Total_RTR,
+      data=df,
+      fill=factor(year),
+      bins = 12
+)
+```
+
+
+__qplot(Total_RTR,__ establishes the plot and states what column we're looking at (total RTR incidents).
+
+__data=df__ states the dataframe where the column is found
+
+__fill=factor(years)__ separates and colors the data by year. It does that by making the column a _factor_, grouping all the rows with 2014 in the years column together.
+
+__bins = 12__ Remember histograms, while resembling bar charts, count the number of values while bar chart show the values. So _bins_ are the number of ways to divide up the value counts.
+
+For instance, in the chart generated there are four values equal-to or greater-than 50 - three from 2016 (blue) and one from 2015 (green).
+
+Here's a excellent explainer on histograms: https://tinlizzie.org/histograms/
+
+## Density plots
+
+Density is a lot like a histogram but shows the distibution of values as a percent and as a smooth line.
+
+```{r}
+
+qplot(Total_RTR, data=df, 
+      geom="density",
+      color=factor(year),
+      fill=factor(year),
+      color=factor(year),
+      linetype = factor(year),
+      alpha=I(.5),
+      main="Distribution of RTR incidents", 
+      xlab="Total RTR incidents",
+      ylab="Density")
+
+```
+
+__qplot(Total_RTR, data=df,__ sets up the plot as above.
+
+__geom="density",__ specifies we want a density chart instead of the default histogram
+
+__fill=factor(year),__ divides the plot and assigns a different color to each factor, as with histogram above.
+
+__color=factor(year),__ and __linetype = factor(year),__ assigns a different type of line based on year and different color. Since it orders the years the same way as _fill_, the lines get the same color as the fill.
+
+__alpha=I(.5),__ sets the alpha or transparency of the polygons so we can see where they overlap. Range goes from 0 to 1, so .5 means they're 50% transparent. Wrapping that number in __I()__ simply keeps it out of the legend.
+
+The rest should be obvious.
+
+## Scatter plots
+
+```{r}
+
+qplot(Total_RTR,UOF_only,
+      data=df
+) + geom_smooth(method = "lm")
+
+
+```
+
+__qplot(Total_RTR,UOF_only,data=df__ compares Total_RTR on the x axis to UOF_only on the y.
+
+__geom_smooth(method="lm")__ computes and places the regression line. The gray shadow is the area of 95% confidence. In other words, based on the data it has R predicts that any new data would fall into that gray area 95% of the time. Given how wide the area is, that's not very impressive. The tighter that area, the more correlation there will likely be.
+
+__One more thing to note:__ Notice how the _geom\_smooth_ command was added with a __+__. That's a very common way of chaining commands together with ggplot.
+
+
+```{r}
+
+qplot(Total_RTR,UOF_only,
+      data=df,
+      color=factor(year)
+) + geom_smooth(method = "lm", se = FALSE) 
+
+```
+
+Same thing as above, but __color=factor(year)__ divides the dots by year. When we apply the regression line with __geom_smooth__ it puts three in - one for each year.
+
+__se=FALSE__ hides the 95% confidence area.
+
+Another way of viewing data with different factors is to use a facet grid.
+
+```{r}
+
+qplot(Total_RTR,UOF_only,
+      data=df, 
+      color=factor(year),
+      xlab="Total RTR", ylab="UOF") + 
+  facet_grid(. ~ factor(year))  + 
+  geom_smooth(method = "lm", se = FALSE)
+
+```
+
+__facet_grid(.~factor(year))__ takes values for each year and puts them in their own chart side-by-side with the other years. 
+
+Replace the __.~__ with another factor, like _quarter_ and you can subdivde the data even more.
+
+```{r}
+
+qplot(Total_RTR,UOF_only,
+      data=df, 
+      color=factor(year),
+      xlab="Total RTR", ylab="UOF") + 
+  facet_grid(quarter ~ factor(year)) 
+
+```
+
+Obviously not impressive with such a small dataset, but imagine how useful it is when working with larger ones.
+
+## Box plots
+
+```{r}
+
+qplot(factor(year), SOF_only, 
+      data=df, 
+      geom=c("boxplot", "jitter"),
+      fill=factor(year), 
+      alpha=I(.5),
+      main="SOF by Year",
+      xlab="Year", ylab="SOF")
+
+```
+
+Not as widely used, but box plots are pretty useful for understand data. 
+
+It divides the most common data into four parts with equal counts of data, or quartiles. Bottom and top quartiles are shown by the extent of the top and bottom lines, while the two middle quartiles are boxed together.
+
+The thick line in the box is the median.
+
+Any points beyond the box and lines are considered potential outliers. So basically, it's showing that most of the data or predicted data would be between the box and lines, and trying to show what would fall outside that prediction.
+
+__factor(year)__ tells qplot to use _year_ as the x axis, and use it as a factor. That means take anything in 2014 and group them.
+
+__geom=c("boxplot", "jitter"),__ tells qplot to create a boxplot. _jitter_ tells it to take the dots and spread them out a bit. If you change that line to __geom="boxplot"__, the dots would be hidden.
+
+## Dot plot
+
+```{r}
+
+qplot(factor(Year_Quarter), SOF_only, 
+      data=df, 
+      geom=c("dotplot"),
+      fill=factor(year), 
+      stackdir = "center", binaxis = "y",
+      main="SOF by Year, quarter",
+      xlab="Year", ylab="SOF")  + coord_flip()
+```
+
+Dot plots use a dot to show value - in this case, they're like bar charts but with dots.
+
+__stackdir = "center",__ places the dot at the center for each line, while __binaxis__ tells it which axis to use for the dot values. In this case, we're looking at SOF.
+
+We have SOF shown by Year_Quarter so there's one dot for each item or "bin." Try changing __factor(Year_Quarter)__ to __year__ or __quarter__ and see what happens.
+
+__coord_flip()__ is something you'll see a lot as we use ggplot2. This takes the chart and flips it - the Y axis appears on the bottom and the X axis on the right.
+
+The reason for this is simple - the year and quarter labels would end up running into each other. 
+
+By making this essentially a horizontal instead of a vertical chart, we can just make the chart taller if we need more space. Which, when looking at this on a mobile device, plays into the way people scroll - up and down and not side-to-side.
+
+But try deleting __coord_flip()__ and see what happens.
+
+---------------------
+Next we'll start working with ggplot2
+

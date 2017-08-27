@@ -1,0 +1,155 @@
+---
+title: "03_basicBars"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We're going to create three different types of bar charts with the Elgin Response to Resistance data.
+
+First we load the readr library and then the dataset.
+
+```{r}
+library(readr)
+df <- read_csv("dfCrime.csv")
+```
+
+Now let's use summary() to remind us of what the data is
+
+```{r}
+summary(df)
+```
+
+Three years with four quarters each of response-to-resistance (RTR) incidents from the Elgin police department. That's broken down by the type of response - show of force only, use of force only and transition - show to use of force.
+
+### Basic bar plot
+
+Let's generate a bar plot of the total RTR incidents
+
+```{r}
+barplot(df$Total_RTR, 
+        names.arg = df$Year_Quarter, cex.names=0.8,
+        main="RTR incidents by year, quarter",
+        xlab = "Number of incidents",
+        col="blue")
+```
+
+Right off the bat, there's a problem. There aren't labels below for each bar, and which label applies to which bar isn't immediately clear.
+
+If you're going to do graphics, not just for yourself but others, you're going to have to pay attention to these kinds of aesthetics. 
+
+There's a lot of ways to address this, but the easiest is by making this a horizontal bar chart. We do this by adding the command __horiz=TRUE__
+
+```{r}
+barplot(df$Total_RTR, 
+        horiz=TRUE,
+        names.arg = df$Year_Quarter, cex.names=0.8,
+        main="RTR incidents by year, quarter",
+        xlab = "Number of incidents",
+        col="blue")
+```
+
+And that's worse. We need to change the parameters of our plots so the axis text is horizontal too. We do that using the par command.
+
+For more information on par, use the help method ?par
+
+```{r}
+par(las=1)
+
+barplot(df$Total_RTR, 
+        horiz=TRUE,
+        names.arg = df$Year_Quarter, cex.names=0.8,
+        main="RTR incidents by year, quarter",
+        xlab = "Number of incidents",
+        col="blue")
+```
+
+__barplot(__ is the command to make bar plots
+
+__df\$Total_RTR__ is the column we want to plot
+
+__horiz=TRUE__ creates a horizontal plot
+
+__names.arg__ are the labels for the bars, __cex__ makes them a bit smaller.
+
+__main__ and __xlab__ are obvious. __col__ is the color to use for the bars.
+
+Sorting is automatic. There are ways to sort the data differently in a basic plot like this differently, but they're very complicated.
+
+###Stacked bar plot
+
+In addition to the total RTR, we have each quarter broken down by the type of response. A stacked bar plot would be very useful for this.
+
+But first, we have to load only the data we want into a matrix and then transpose it. 
+
+```{r}
+counts2 <- matrix(c(df$SOF_only,df$UOF_only,df$Transitions),ncol=3)
+colnames(counts2)=c("SOF_only","UOF_only","Transitions")
+rownames(counts2)=df$Year_Quarter
+counts2
+```
+
+__counts2 <- matrix(__ takes the list of the columns we want, creates a matrix and puts them into __counts2__. __ncol=3__ specifies the number of columns in the matrix.
+
+__colnames(counts2)__ assigns names to the columns
+
+__rownames(counts2)__ assigns names to the rows from the Year_Quarter column.
+
+Now we need to transpose it.
+
+```{r}
+counts <- t(counts2)
+counts
+```
+
+Compare counts2 to counts to see the difference.
+
+Now we can plot
+
+```{r}
+par(las=1)
+
+barplot(counts, horiz=TRUE, cex.names=0.8,
+        main="RTR incidents by year, quarter",
+        xlab = "Number of incidents",
+        col=c("green","blue","red"),
+        legend = rownames(counts),
+        args.legend = list(x ='bottomright', inset=0.01)
+)
+```
+
+__barplot__ needs the __par__ command to turn the axis labels. Generally you only need this once in a file.
+
+__legend__ adds a legend based on the row names. Remember, we transposed the matrix so the columns became our rows.
+
+__args.legend__ places the legend at the bottom right, __inset__ nudges it over a bit.
+
+Try swapping in Counts2 instead of counts to see what happens.
+
+### Grouped bar plot
+
+The only difference between a stacked and a grouped bar plot is adding the __beside=TRUE__ command.
+
+```{r}
+par(las=1)
+
+barplot(counts, horiz=TRUE, cex.names=0.8,
+        beside=TRUE,
+        main="RTR incidents by year, quarter",
+        xlab = "Number of incidents",
+        col=c("green","blue","red"),
+        legend = rownames(counts),
+        args.legend = list(x ='bottomright', inset=0.01)
+)
+```
+
+Aesthetically, you need to decide which is better - stacked or grouped. For this data, stacked is more appropriate since the data add up to a total. 
+
+But if you're comparing two completely different measures over time, then grouped would be best.

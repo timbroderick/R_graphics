@@ -1,0 +1,102 @@
+---
+title: "08_subsetData"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Preparing your data for ggplot2
+
+This guide will likely have the least amount of code, but it may contain the most difficult concept to grasp.
+
+The simple reason is that ggplot2 asks to have the data you want to plot as the focal point of your dataframe.
+
+To make that clear, let's load in the data and libraries we'll need.
+
+```{r}
+
+library(readr)
+library(tidyr)
+
+df <- read_csv("dfCrime.csv")
+
+head(df)
+
+```
+
+The __head__ command shows the first six rows of the dataframe.
+
+df is set up like a typical spreadsheet: Rows contain all the information pertaining to the item in the first column, __Year_Quarter__. Each subsequent column contains only the information described by the column header.
+
+So, _total\_RTR_ is the total number of response to resistance incidents. The next three columns - _SOF\_only_, _UOF\_only_ and _Transitions_ - are three categories of RTR incidents. If we add up the totals of these three for each row we would get the number in Total_RTR.
+
+Those three categories are part of a whole. So ggplot2 wants us to arrange the numbers that way, with all the other columns being descriptive of those numbers.
+
+We can do that with the _tidyer_ library. But first, let's add the _sort_ column to the dataset, as it's something we'll need in the future.
+
+```{r}
+dfsort <-df[order(df$Year_Quarter),]
+dfsort$sort <- seq.int(nrow(dfsort))
+names(dfsort)
+head(dfsort)
+```
+
+First we sort the dataframe based on the column Year_Quarter, then store the sorted information in a new dataframe called dfsort.
+
+Then we grab the number of each row and store it in a new column called _dfsort\$sort_.
+
+Now let's use tidyr to reshape our dataframe.
+
+```{r}
+
+dfsub <- gather(dfsort, set, value, 7:9, factor_key=TRUE)
+names(dfsub)
+head(dfsub)
+
+```
+
+It's difficult to see in this guide, but run the script and then compare the new dataframe dfsub with the original df.
+
+Here's what we've done:
+
+* __dfsub <- gather(dfsort,__ sets up the tidyr command.
+
+* __7:9__ lists the columns to rewor - in this case, the three categories of RTR incidents.
+
+* __set, value,__ creates two new columns using those three. __set__ is where it stores the column names for three categories. __value__ is where it puts the values of those three columns.
+
+* __factor_key=TRUE__ saves __set__ as a factor of __value__
+
+Every other column in the original dataset is included.
+
+As you can see, there is only one of each value in the __value__ column, but there are multiple instances of the three categories in the __set__ column. 
+
+The reason for this will become far more clear once we start plotting more complicated graphics than the simple bar chart. For now, especially if you're used to working in excel, this is a new way of considering your data and it will likely take a little time to get used to.
+
+We'll finish this off by making those levels in __set__ a bit more reader friendly because they'll be showing up in our graphics as the text of legends.
+
+```{r}
+
+dfsub$set <- factor(dfsub$set, levels = c("Transitions","SOF_only","UOF_only"),
+                 labels = c("Transitions","Show of force","Use of force" ))
+
+write_csv(dfsub,"dfsubset.csv")
+
+```
+
+__dfsub\$set <- factor(dfsub\$set,__ takes the column __set__ and saves it as a factor.
+
+__levels = c("Transitions","SOF_only","UOF_only"),__ selects the levels in __set__. If you recall, these were our column names. Note the order in which we select them. In this step, we can also set the order that these are used in plots.
+
+__labels = c("Transitions","Show of force","Use of force" ))__ replaces the selected levels with new, more reader-friendly labels.
+
+Finally, we save the result in a cvs.
+
+Next, we'll use the data we reconfigured to create more complex plots.

@@ -1,0 +1,191 @@
+---
+title: "06_basicPlots2"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In the previous tutorial, we used the __par__ command to create space for three seperate plots, which allowed us to compare the three categories of Response to Response to resistance to total RTR.
+
+In this tutorial, we'll use color to explore the data.
+
+Load the readr library and then the dataset.
+
+```{r}
+library(readr)
+df <- read_csv("dfCrime.csv")
+```
+
+Now let's use summary() to remind us of what the data is
+
+```{r}
+summary(df)
+```
+
+Three years with four quarters each of response-to-resistance (RTR) incidents from the Elgin police department. That's broken down by the type of response - show of force only, use of force only and transition - show to use of force.
+
+Generate the basic scatter plot, with custom labels
+
+```{r}
+plot(df$Total_RTR, df$UOF_only, 
+     main = "UOF vs Total RTR incidents", 
+     xlab="Total response to resistance incidents", 
+     ylab="Use of force incidents only")
+```
+
+One of the factors this data has is the year it occured. We can use color to see it. First, we need to select the data that's associated with each year and add them to the plot.
+
+```{r}
+plot(df$Total_RTR, df$UOF_only, 
+     main = "UOF vs Total RTR incidents", 
+     xlab="Total response to resistance incidents", 
+     ylab="Use of force incidents only")
+
+y2014 <- subset(df, year==2014)
+y2015 <- subset(df, year==2015)
+y2016 <- subset(df, year==2016)
+points(y2014$Total_RTR,y2014$UOF_only,col="red",pch=19)
+points(y2015$Total_RTR,y2015$UOF_only,col="blue",pch=19)
+points(y2016$Total_RTR,y2016$UOF_only,col="green",pch=19)
+
+```
+
+Using __subset__, we select everything in the dataframe where the column year equals the date and stores it in the a new dataframe. So, __y2014__ contains everything were the year = 2014.
+
+Then, __points__ places those points onto the plot. __col__ assigns a color, __pch=19__ makes the point a filled circle.
+
+Now add the legend and regression line
+
+
+```{r}
+plot(df$Total_RTR, df$UOF_only, 
+     main = "UOF vs Total RTR incidents", 
+     xlab="Total response to resistance incidents", 
+     ylab="Use of force incidents only")
+
+y2014 <- subset(df, year==2014)
+y2015 <- subset(df, year==2015)
+y2016 <- subset(df, year==2016)
+points(y2014$Total_RTR,y2014$UOF_only,col="red",pch=19)
+points(y2015$Total_RTR,y2015$UOF_only,col="blue",pch=19)
+points(y2016$Total_RTR,y2016$UOF_only,col="green",pch=19)
+
+legend("topleft", 
+       pch = c(19,19,19), 
+       col = c("red","blue","green"), 
+       legend = c("2014", "2015", "2016"))
+abline(lm(df$UOF_only~df$Total_RTR))
+
+```
+
+Using color adds another dimension to the chart.
+
+###Using color to plot categories
+
+We can use color to plot all three of the Response to Resistance categories in a single plot.
+
+First let's clear the plot window with the dev.off() command.
+
+```{r}
+dev.off()
+```
+
+Then, set up the entire graphic by plotting the first category, Use of Force
+
+```{r}
+plot(df$Total_RTR, df$UOF_only, 
+     main = "Response to resistance incidents", 
+     xlab="Total response to resistance incidents", 
+     ylab="Response by type",
+     xlim=c(0,60), ylim=c(0,35),col="red",pch=19)
+```
+
+We set all the titles and labels, the extents of the axes and make the UOF points a filled red circle.
+
+Then add the other two categories to the existing plot.
+
+```{r}
+plot(df$Total_RTR, df$UOF_only, 
+     main = "Response to resistance incidents", 
+     xlab="Total response to resistance incidents", 
+     ylab="Response by type",
+     xlim=c(0,60), ylim=c(0,35),col="red",pch=19)
+points(df$Total_RTR,df$SOF_only,col="blue",pch=19)
+points(df$Total_RTR,df$Transitions,col="green",pch=19)
+
+```
+
+To understand what we're seeing we need a legend.
+
+```{r}
+plot(df$Total_RTR, df$UOF_only, 
+     main = "Response to resistance incidents", 
+     xlab="Total response to resistance incidents", 
+     ylab="Response by type",
+     xlim=c(0,60), ylim=c(0,35),col="red",pch=19)
+points(df$Total_RTR,df$SOF_only,col="blue",pch=19)
+points(df$Total_RTR,df$Transitions,col="green",pch=19)
+legend("topleft", 
+       pch = c(19,19,19), 
+       col = c("red","blue","green"), 
+       legend = c("UOF", "SOF", "Transitions"))
+
+```
+
+Finally, we can add regression lines for each category.
+
+```{r}
+plot(df$Total_RTR, df$UOF_only, 
+     main = "Response to resistance incidents", 
+     xlab="Total response to resistance incidents", 
+     ylab="Response by type",
+     xlim=c(0,60), ylim=c(0,35),
+     col="red",
+     pch=19)
+points(df$Total_RTR,df$SOF_only,col="blue",pch=19)
+points(df$Total_RTR,df$Transitions,col="green",pch=19)
+legend("topleft", 
+       pch = c(19,19,19), 
+       col = c("red","blue","green"), 
+       legend = c("UOF", "SOF", "Transitions"))
+abline(lm(df$UOF_only~df$Total_RTR, par(col="red")))
+abline(lm(df$SOF_only~df$Total_RTR, par(col="blue")))
+abline(lm(df$Transitions~df$Total_RTR, par(col="green")))
+```
+
+This is good, but what if we have a lot of dots? One way is to make the dots semi-transparent using the __adjustcolor__
+
+```{r}
+plot(df$Total_RTR, df$UOF_only, 
+     main = "Response to resistance incidents", 
+     xlab="Total response to resistance incidents", 
+     ylab="Response by type",
+     xlim=c(0,60), ylim=c(0,35),
+     col=adjustcolor("red", alpha=0.4),
+     pch=19)
+points(df$Total_RTR,df$SOF_only,
+       col=adjustcolor("blue", alpha=0.4),
+       pch=19)
+points(df$Total_RTR,df$Transitions,
+       col=adjustcolor("green", alpha=0.4),
+       pch=19)
+legend("topleft", 
+       pch = c(19,19,19), 
+       col = c("red","blue","green"), 
+       legend = c("UOF", "SOF", "Transitions"))
+abline(lm(df$UOF_only~df$Total_RTR, par(col="red")))
+abline(lm(df$SOF_only~df$Total_RTR, par(col="blue")))
+abline(lm(df$Transitions~df$Total_RTR, par(col="green")))
+```
+
+__alpha__ is the command controlling transparency. The value goes from 0 to 1. At 0.4, the dots are 40% visible.
+
+Depending on how many points are on the chart, and how closely grouped they are, you may want a higher or lower alpha value.
+

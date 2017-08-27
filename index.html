@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Introduction</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making graphics with R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="00_Navigation.html">00_Navigation</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Introduction</h1>
+
+</div>
+
+
+<p>Aside from this document (00_Introduction), this series correspond to R scripts of the same name. 01_basicHist.html describes in detail what you’ll see in 01_basicHist.R and so on. This allows us keep the annotations in the R script fairly light and allows you to have this html guide open or printed out while you work with the script.</p>
+<p>The idea is that while you’re working with the R scripts, you can have the html file open in a browser window. The html files can be printed too. Use whatever works best for you.</p>
+<p>If you need some assistance with these, please let me know.</p>
+<div id="important-note" class="section level4">
+<h4>Important note</h4>
+<p>Especially if you’re new to coding, you’re not going to understand everything in these files.</p>
+<p>That’s OK. That’s normal. You don’t have to understand everything to use it.</p>
+<p>Think about this like you’re opening a door. All you need to know is how to turn the door knob, you don’t have to know how to design and machine all the parts and install a door knob in a home.</p>
+<p>At some point you might want to or need to, but you don’t have to right now. You’re not reading this because you want to become a compuer scientist, you’re reading this to become a better journalist.</p>
+<p>If at any time you want to learn more about something, copy the code snippit and paste it into a google search. Chances are lots of people have written about it and some of them may have even written a tutorial about it.</p>
+<p>BTW, that’s a valuable tip: google what you’re curious about and add the word “tutorial.” It’s how most of the links listed below were found.</p>
+<p>But generally, don’t feel bad because you don’t ‘get’ something right off. No one does.</p>
+</div>
+<div id="if-things-go-wrong" class="section level4">
+<h4>If things go wrong</h4>
+<p>They will. You may have an extra comma, or forgotten to close parenthesis. It happens to everyone.</p>
+<p>R is pretty good about telling you where the problem is. Or, try comparing your code to code that works and see if you can spot the difference.</p>
+<p>Sometimes problems can get complicated. If so, you can try copying the warning message into a google search. A lot of times you’ll come across the answer because you’re not the only person to have this problem. You can also contact me.</p>
+<p>And sometimes, it’s really complicated. All these files were created using R version 3.3.3 and R Studio 1.0.143. That shouldn’t be an issue until it is (welcome to coding).</p>
+</div>
+<div id="how-these-guides-are-structured" class="section level2">
+<h2>How these guides are structured</h2>
+<p>These guides assume you’ve installed R and R Studio, and have done some of the first Swirl tutorials. Say, the tutorials up until “functions.”</p>
+<ul>
+<li><p>From 01 to 06, we look at R’s basic plotting tools. For exploring data yourself, or just for practice, these are good to know. However, their design isn’t great for print or online. And, it takes some work to get a decent graphic out of them.</p></li>
+<li><p>At 07, we start working with ggplot2, the R graphics library that takes a sophisticated approach to graphics. 08_qplot is part of ggplot - q stands for quick, and it’s meant to create quick visualizations that help you understand the data. Qplot is an excellent way of quickly looking at your data, and it’s a lot easier to use than the basic plots. Along with ggplot2, qplot should replace all those basic plots.</p></li>
+<li><p>From 08 through 14, we learn to create the most common graphic types - bar charts, stacked bar charts, grouped bar charts, line and area charts. We also learn how to create color and black-and-white pdfs suitable for print publication and color png files for online.</p></li>
+<li><p>15 demonstrates how to explore relationships between data using qplot scatter plots and finally creating a publication-ready scatter plot that shows what we found.</p></li>
+<li><p>From 16 on, we’ll show how to do some less used graphic types like box plots and heat maps.</p></li>
+<li><p>Finally, M01 and on looks at R’s ability to do maps - specifically choropleth maps.</p></li>
+</ul>
+</div>
+<div id="links-and-resources" class="section level2">
+<h2>Links and resources</h2>
+<p>If you want to skip the rest of this, go ahead.</p>
+<p>Below this are some useful links and a discussion of open source software like R. I recommend you look through this stuff when you get the chance.</p>
+<p>But if you want to jump into the scripts and guides, go ahead.</p>
+<div id="resources" class="section level3">
+<h3>Resources</h3>
+<p>Below are links where you can get the latest versions of R and R studio, as well as how to install the Swirl tutorials.</p>
+<p>Along with those, there are links to tutorials, books and other places where you can learn more about R.</p>
+<p>I highly recommend you explore these - they are the source material for the files you’re going to be using. They were created by talented professionals who have freely shared their knowledge, including investigative reporters at some of the top news organizations in the country. The work they’re doing is the kind of thing we should aspire to.</p>
+<div id="installing-r" class="section level4">
+<h4>Installing R</h4>
+<p>To get R, go to <a href="https://www.r-project.org/" class="uri">https://www.r-project.org/</a></p>
+<p>Once that’s installed, get the free version of R-studio here <a href="https://www.rstudio.com/" class="uri">https://www.rstudio.com/</a> You can run R without R-studio. But R-studio is a friendlier interface for R, and most people recommend it.</p>
+<p>Be sure to install the versions compatible with your operating system, especially version number.</p>
+</div>
+<div id="learning-r" class="section level4">
+<h4>Learning R</h4>
+<p>Swirl is a set of interactive - free - tutorials that will take you through the basics of learning R and R-studio. <a href="http://swirlstats.com/" class="uri">http://swirlstats.com/</a> To install it, type: <code>install.packages(&quot;swirl&quot;)</code> in the R console. It’ll download and install it for you.</p>
+<p>To run swirl, type: <code>library(swirl)</code> and that will activate the tutorials.</p>
+<p>I’m also going through this Udemy class: <a href="https://www.udemy.com/r-programming/" class="uri">https://www.udemy.com/r-programming/</a> I find it to be a nice compliment to the swirl tutorials.</p>
+<p>If you’ve never done a Udemy class, the first time you go to their website and look at a specific class, it’ll offer that class to you for a drastically reduced price. This r-programming class was only $10.</p>
+</div>
+<div id="other-resources---graphics" class="section level4">
+<h4>Other resources - graphics</h4>
+<p>Find annotated scripts in folder R Graphics that start with basic plotting in R and progress through to plots using ggplot2. The point with these is to produce various chart types suitable for print or online - and for online, specifically viewable on mobile devices.</p>
+<p>I found these tutorials invaluable for developing our R scripts for graphics <a href="http://t-redactyl.io/tag/r-graphing-tutorials.html" class="uri">http://t-redactyl.io/tag/r-graphing-tutorials.html</a></p>
+<p>This is an excellent introduction to R for reporters. <a href="https://paldhous.github.io/NICAR/2017/r-analysis.html" class="uri">https://paldhous.github.io/NICAR/2017/r-analysis.html</a> This was taught at NICAR 2017, but the step-by-step worksheet is fairly easy to follow.</p>
+<p>Want to see how 538 does their graphics? They use R, and they’re putting all their code online for free. Here’s a description of what they’re doing: <a href="https://cran.r-project.org/web/packages/fivethirtyeight/vignettes/fivethirtyeight.html" class="uri">https://cran.r-project.org/web/packages/fivethirtyeight/vignettes/fivethirtyeight.html</a></p>
+<p>And here’s the R scripts and datasets they examined <a href="https://github.com/rudeboybert/fivethirtyeight/tree/master/data-raw" class="uri">https://github.com/rudeboybert/fivethirtyeight/tree/master/data-raw</a></p>
+<p>Here’s the book on data science and R, with one of the authors being the person who created the visualization library ggplo2 <a href="http://r4ds.had.co.nz/" class="uri">http://r4ds.had.co.nz/</a></p>
+<p>Here’s a free book on advanced R: <a href="http://adv-r.had.co.nz/" class="uri">http://adv-r.had.co.nz/</a></p>
+<p>David Montgomery of the Pioneer Press shared this analysis of police data, from working the data to visualizing it: <a href="https://github.com/pioneerpress/code/tree/master/st-anthony-police" class="uri">https://github.com/pioneerpress/code/tree/master/st-anthony-police</a></p>
+<p>He’s constantly doing little things to develop his skills - just like an athlete will work out every day. Here’s where he has that, some of it fun: <a href="https://github.com/dhmontgomery/personal-work" class="uri">https://github.com/dhmontgomery/personal-work</a></p>
+</div>
+<div id="other-resources---mapping" class="section level4">
+<h4>Other resources - mapping</h4>
+<p>There’s a way bigger challenge doing maps in R, especially if you don’t have experience in GIS at all. My annotated scripts on this are in folder mapping. The focus on here is to create exloratory chloropleth maps with your choice of color palattes. To also have these able to be exported for print or online would be gravy.</p>
+<p>Here’s an extensive online tutorial to get started with mapping and R: <a href="https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.md" class="uri">https://github.com/Robinlovelace/Creating-maps-in-R/blob/master/README.md</a> It had some rough parts, but I worked through it and my annotations may help: <a href="https://github.com/dailyherald/R-work/blob/master/mapping/mapping.R" class="uri">https://github.com/dailyherald/R-work/blob/master/mapping/mapping.R</a></p>
+<p>This was a good compliment to the above: <a href="http://www.computerworld.com/article/3038270/data-analytics/create-maps-in-r-in-10-fairly-easy-steps.html" class="uri">http://www.computerworld.com/article/3038270/data-analytics/create-maps-in-r-in-10-fairly-easy-steps.html</a></p>
+<p>Another step by step here: <a href="https://reubenfb.github.io/mapping_in_r/presentation.html#/" class="uri">https://reubenfb.github.io/mapping_in_r/presentation.html#/</a></p>
+<p>This is just plain beautiful to look at, but it also has good information on working your data so you can do chloropleth maps with custom breaks: <a href="https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only/#discrete-classes-with-quantile-scale" class="uri">https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only/#discrete-classes-with-quantile-scale</a></p>
+<p>This may be a good compliment to the above: <a href="http://www.kevjohnson.org/making-maps-in-r/" class="uri">http://www.kevjohnson.org/making-maps-in-r/</a></p>
+<p>More info on the scales package: <a href="https://www.rdocumentation.org/packages/scales/versions/0.4.1" class="uri">https://www.rdocumentation.org/packages/scales/versions/0.4.1</a></p>
+<p>Looks like the Financial Times is going to start sharing R tutorials: <a href="https://github.com/ft-interactive/R-tutorials" class="uri">https://github.com/ft-interactive/R-tutorials</a> The first one up is on joining data to shapefiles. FYI, shapefiles are one of the ways mapping information is stored. So, for instance, we have shapefiles for all the counties in Illinois that can be used to show average income by county or median age.</p>
+</div>
+<div id="other-resources---advanced" class="section level4">
+<h4>Other resources - advanced</h4>
+<p>I took this one on doing interactives with R at NICAR 2017. I would say it’s a little advanced, but it used things we use here at the DH for our interactive maps and graphics.<br />
+<a href="https://paldhous.github.io/NICAR/2017/r-to-javascript.html" class="uri">https://paldhous.github.io/NICAR/2017/r-to-javascript.html</a></p>
+<p>This is a weekend project - take some time on a weekend and just go through this as an exercise: Andrew Ba Tran examines police stun gun use in Connecticut. He works the data, and examines it visually with charts and maps all generated in R. This was for a NICAR session. <a href="https://trendct.github.io/data/2016/06/stun-guns/" class="uri">https://trendct.github.io/data/2016/06/stun-guns/</a></p>
+<p>This is amazing: Washington Post shared all the data and R scripts they used to break this major story: “Jared Kushner and his partners used a program meant for job-starved areas to build a luxury skyscraper” <a href="https://github.com/wpinvestigative/kushner_eb5_census" class="uri">https://github.com/wpinvestigative/kushner_eb5_census</a></p>
+</div>
+</div>
+</div>
+<div id="final-thoughts" class="section level2">
+<h2>Final thoughts</h2>
+<div id="open-source-and-fair-use" class="section level4">
+<h4>Open source and fair use</h4>
+<p>The open-source ecosystem is pretty unique. Millions of people (not an exaggeration) participate in building and maintaining software that’s free to use and share. In some cases, we’ve used some of their code in our scripts. That’s OK, it’s how open source coding is supposed to work.</p>
+<p>For instance, say you want to load in a comma-separated file. You search the internet and find a chunk of code someone posted:</p>
+<pre class="r"><code>df &lt;- read_csv(&quot;filename.csv&quot;)</code></pre>
+<p>It’s fine to use the code - no one owns the code itself. And part of the open-source ethos is sharing knowledge so that others can learn. They do that because others did that for them.</p>
+<p>However, taking someone’s data and their script, running it to produce their work and then using their result in your work - that could be a problem.</p>
+<p>But if you’re just looking to learn and improve your own skills, don’t be afraid to look at other peoples’ work.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

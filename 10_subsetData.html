@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>08_subsetData</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making graphics with R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="00_Navigation.html">00_Navigation</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">08_subsetData</h1>
+
+</div>
+
+
+<div id="preparing-your-data-for-ggplot2" class="section level1">
+<h1>Preparing your data for ggplot2</h1>
+<p>This guide will likely have the least amount of code, but it may contain the most difficult concept to grasp.</p>
+<p>The simple reason is that ggplot2 asks to have the data you want to plot as the focal point of your dataframe.</p>
+<p>To make that clear, let’s load in the data and libraries we’ll need.</p>
+<pre class="r"><code>library(readr)
+library(tidyr)
+
+df &lt;- read_csv(&quot;dfCrime.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Year_Quarter = col_character(),
+##   year = col_integer(),
+##   quarter = col_character(),
+##   Total_CFS = col_integer(),
+##   Total_arrests = col_integer(),
+##   Total_RTR = col_integer(),
+##   SOF_only = col_integer(),
+##   UOF_only = col_integer(),
+##   Transitions = col_integer()
+## )</code></pre>
+<pre class="r"><code>head(df)</code></pre>
+<pre><code>## # A tibble: 6 x 9
+##   Year_Quarter  year quarter Total_CFS Total_arrests Total_RTR SOF_only
+##          &lt;chr&gt; &lt;int&gt;   &lt;chr&gt;     &lt;int&gt;         &lt;int&gt;     &lt;int&gt;    &lt;int&gt;
+## 1      2014 1Q  2014      1Q     19217           989        32       12
+## 2      2014 2Q  2014      2Q     21265          1178        25        7
+## 3      2014 3Q  2014      3Q     21994          1246        36       11
+## 4      2014 4Q  2014      4Q     18182          1047        28        6
+## 5      2015 1Q  2015      1Q     18178          1014        34       10
+## 6      2015 2Q  2015      2Q     19812           929        32        9
+## # ... with 2 more variables: UOF_only &lt;int&gt;, Transitions &lt;int&gt;</code></pre>
+<p>The <strong>head</strong> command shows the first six rows of the dataframe.</p>
+<p>df is set up like a typical spreadsheet: Rows contain all the information pertaining to the item in the first column, <strong>Year_Quarter</strong>. Each subsequent column contains only the information described by the column header.</p>
+<p>So, <em>total_RTR</em> is the total number of response to resistance incidents. The next three columns - <em>SOF_only</em>, <em>UOF_only</em> and <em>Transitions</em> - are three categories of RTR incidents. If we add up the totals of these three for each row we would get the number in Total_RTR.</p>
+<p>Those three categories are part of a whole. So ggplot2 wants us to arrange the numbers that way, with all the other columns being descriptive of those numbers.</p>
+<p>We can do that with the <em>tidyer</em> library. But first, let’s add the <em>sort</em> column to the dataset, as it’s something we’ll need in the future.</p>
+<pre class="r"><code>dfsort &lt;-df[order(df$Year_Quarter),]
+dfsort$sort &lt;- seq.int(nrow(dfsort))
+names(dfsort)</code></pre>
+<pre><code>##  [1] &quot;Year_Quarter&quot;  &quot;year&quot;          &quot;quarter&quot;       &quot;Total_CFS&quot;    
+##  [5] &quot;Total_arrests&quot; &quot;Total_RTR&quot;     &quot;SOF_only&quot;      &quot;UOF_only&quot;     
+##  [9] &quot;Transitions&quot;   &quot;sort&quot;</code></pre>
+<pre class="r"><code>head(dfsort)</code></pre>
+<pre><code>## # A tibble: 6 x 10
+##   Year_Quarter  year quarter Total_CFS Total_arrests Total_RTR SOF_only
+##          &lt;chr&gt; &lt;int&gt;   &lt;chr&gt;     &lt;int&gt;         &lt;int&gt;     &lt;int&gt;    &lt;int&gt;
+## 1      2014 1Q  2014      1Q     19217           989        32       12
+## 2      2014 2Q  2014      2Q     21265          1178        25        7
+## 3      2014 3Q  2014      3Q     21994          1246        36       11
+## 4      2014 4Q  2014      4Q     18182          1047        28        6
+## 5      2015 1Q  2015      1Q     18178          1014        34       10
+## 6      2015 2Q  2015      2Q     19812           929        32        9
+## # ... with 3 more variables: UOF_only &lt;int&gt;, Transitions &lt;int&gt;, sort &lt;int&gt;</code></pre>
+<p>First we sort the dataframe based on the column Year_Quarter, then store the sorted information in a new dataframe called dfsort.</p>
+<p>Then we grab the number of each row and store it in a new column called <em>dfsort$sort</em>.</p>
+<p>Now let’s use tidyr to reshape our dataframe.</p>
+<pre class="r"><code>dfsub &lt;- gather(dfsort, set, value, 7:9, factor_key=TRUE)
+names(dfsub)</code></pre>
+<pre><code>## [1] &quot;Year_Quarter&quot;  &quot;year&quot;          &quot;quarter&quot;       &quot;Total_CFS&quot;    
+## [5] &quot;Total_arrests&quot; &quot;Total_RTR&quot;     &quot;sort&quot;          &quot;set&quot;          
+## [9] &quot;value&quot;</code></pre>
+<pre class="r"><code>head(dfsub)</code></pre>
+<pre><code>## # A tibble: 6 x 9
+##   Year_Quarter  year quarter Total_CFS Total_arrests Total_RTR  sort
+##          &lt;chr&gt; &lt;int&gt;   &lt;chr&gt;     &lt;int&gt;         &lt;int&gt;     &lt;int&gt; &lt;int&gt;
+## 1      2014 1Q  2014      1Q     19217           989        32     1
+## 2      2014 2Q  2014      2Q     21265          1178        25     2
+## 3      2014 3Q  2014      3Q     21994          1246        36     3
+## 4      2014 4Q  2014      4Q     18182          1047        28     4
+## 5      2015 1Q  2015      1Q     18178          1014        34     5
+## 6      2015 2Q  2015      2Q     19812           929        32     6
+## # ... with 2 more variables: set &lt;fctr&gt;, value &lt;int&gt;</code></pre>
+<p>It’s difficult to see in this guide, but run the script and then compare the new dataframe dfsub with the original df.</p>
+<p>Here’s what we’ve done:</p>
+<ul>
+<li><p><strong>dfsub &lt;- gather(dfsort,</strong> sets up the tidyr command.</p></li>
+<li><p><strong>7:9</strong> lists the columns to rewor - in this case, the three categories of RTR incidents.</p></li>
+<li><p><strong>set, value,</strong> creates two new columns using those three. <strong>set</strong> is where it stores the column names for three categories. <strong>value</strong> is where it puts the values of those three columns.</p></li>
+<li><p><strong>factor_key=TRUE</strong> saves <strong>set</strong> as a factor of <strong>value</strong></p></li>
+</ul>
+<p>Every other column in the original dataset is included.</p>
+<p>As you can see, there is only one of each value in the <strong>value</strong> column, but there are multiple instances of the three categories in the <strong>set</strong> column.</p>
+<p>The reason for this will become far more clear once we start plotting more complicated graphics than the simple bar chart. For now, especially if you’re used to working in excel, this is a new way of considering your data and it will likely take a little time to get used to.</p>
+<p>We’ll finish this off by making those levels in <strong>set</strong> a bit more reader friendly because they’ll be showing up in our graphics as the text of legends.</p>
+<pre class="r"><code>dfsub$set &lt;- factor(dfsub$set, levels = c(&quot;Transitions&quot;,&quot;SOF_only&quot;,&quot;UOF_only&quot;),
+                 labels = c(&quot;Transitions&quot;,&quot;Show of force&quot;,&quot;Use of force&quot; ))
+
+write_csv(dfsub,&quot;dfsubset.csv&quot;)</code></pre>
+<p><strong>dfsub$set &lt;- factor(dfsub$set,</strong> takes the column <strong>set</strong> and saves it as a factor.</p>
+<p><strong>levels = c(“Transitions”,“SOF_only”,“UOF_only”),</strong> selects the levels in <strong>set</strong>. If you recall, these were our column names. Note the order in which we select them. In this step, we can also set the order that these are used in plots.</p>
+<p><strong>labels = c(“Transitions”,“Show of force”,“Use of force” ))</strong> replaces the selected levels with new, more reader-friendly labels.</p>
+<p>Finally, we save the result in a cvs.</p>
+<p>Next, we’ll use the data we reconfigured to create more complex plots.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

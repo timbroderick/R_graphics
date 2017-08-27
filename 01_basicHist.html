@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>01_basicHist</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making graphics with R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="00_Navigation.html">00_Navigation</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">01_basicHist</h1>
+
+</div>
+
+
+<div id="interview-the-data" class="section level2">
+<h2>Interview the data</h2>
+<p>“Interviewing your data” is a concept introduced through Investigative Reporters and Editors, an organization I highly recommend you look into.</p>
+<p>It means you’re using code to ask questions about the nature of the data. The data set we’ll mostly be using isn’t very large so this step isn’t going to be very challenging.</p>
+<p>But it will be the longest of these guides.</p>
+<p>We’ll be working with three years of data from the Elgin police department, each year having four quarters, so a total of 12 rows of information. The data itself looks at their use of physical force in response to resistance, use of stun guns and use of handguns. It includes stats on officer and suspect injuries, and overall numbers on arrests.</p>
+<p><em>Let’s take a moment to point out that - for a reporter - none of this is a replacement for talking with people. Any dataset should simply be one source of information out of many that you use for a story.</em></p>
+<p><em>And you need to be thinking critically about the data like any source. For instance, there’s no geographical data associated in the data. That means we can’t map any of this. It doesn’t necessarily mean someone’s trying to hide anything, but not having something that potentially describes the data in a certain way is like making an entire topic off limits at a press conference.</em></p>
+<p>The first step is to bring your data into R and to do that we’ll need to load in a library.</p>
+<pre class="r"><code>library(readr)</code></pre>
+<p>In this case the readr package is a bit like using a jackhammer to drive a nail, but it’s a good package to know about.</p>
+<p>Now read in the data using read_csv, storing it in a dataframe called “elgCrime”</p>
+<pre class="r"><code>elgCrime &lt;- read_csv(&quot;ElginUOF.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_integer(),
+##   Year_Quarter = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<p>Very quickly, here’s a number of ways you can examine the nature of the dataset</p>
+<pre class="r"><code>ls() # lists all the datasets loaded in your R studio</code></pre>
+<pre><code>## [1] &quot;elgCrime&quot;</code></pre>
+<pre class="r"><code>class(elgCrime) # Tells us the data is in a dataframe</code></pre>
+<pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
+<pre class="r"><code>dim(elgCrime) # finds number of rows and columns</code></pre>
+<pre><code>## [1] 12 23</code></pre>
+<pre class="r"><code>nrow(elgCrime) # finds number of rows</code></pre>
+<pre><code>## [1] 12</code></pre>
+<pre class="r"><code>ncol(elgCrime) # finds number of columns</code></pre>
+<pre><code>## [1] 23</code></pre>
+<pre class="r"><code>object.size(elgCrime) # size of the data set in memory used</code></pre>
+<pre><code>## 15760 bytes</code></pre>
+<p>All these are useful at the start - if you’re expecting information about the 108 counties in Illinois but your dataset only has 103 rows, there’s something wrong.</p>
+<p>A quick techinical note about object.size: Many programs will use the harddrive to supplement the memory of your computer. R doesn’t do that. So if you’re working with a big file but only have 2 gigs of memory, things might run slow - or not at all. So object.size is a good way to test if a file is going to be problematic.</p>
+<p>There’s a few ways to look at the data itself. The first is in R studio, where under the Environment tab you can click on “elgCrime” and see a sortable table much like Excel (expect you can’t select and edit).</p>
+<p>When the data is too big, you would use these commands</p>
+<pre class="r"><code>names(elgCrime) # returns vector of column names</code></pre>
+<pre><code>##  [1] &quot;Year_Quarter&quot;        &quot;Total_CFS&quot;           &quot;Total_arrests&quot;      
+##  [4] &quot;Total_RTR_incidents&quot; &quot;SOF_only&quot;            &quot;UOF_only&quot;           
+##  [7] &quot;Total_transitions&quot;   &quot;Handgun_drawn_NP&quot;    &quot;Handgun_pointed&quot;    
+## [10] &quot;Handgun_discharged&quot;  &quot;Total_handgun&quot;       &quot;Traser_drawn_NP&quot;    
+## [13] &quot;Taser_pointed&quot;       &quot;Taser_fired&quot;         &quot;Total_taser&quot;        
+## [16] &quot;Officer_noInjuries&quot;  &quot;Officer_minor&quot;       &quot;Officer_mayor&quot;      
+## [19] &quot;Total_officer&quot;       &quot;Suspect_noInjuries&quot;  &quot;Suspect_minor&quot;      
+## [22] &quot;Suspect_major&quot;       &quot;Total_suspect&quot;</code></pre>
+<pre class="r"><code>head(elgCrime) # looks at first six columns (with column names)</code></pre>
+<pre><code>## # A tibble: 6 x 23
+##   Year_Quarter Total_CFS Total_arrests Total_RTR_incidents SOF_only
+##          &lt;chr&gt;     &lt;int&gt;         &lt;int&gt;               &lt;int&gt;    &lt;int&gt;
+## 1      2014 1Q     19217           989                  32       12
+## 2      2014 2Q     21265          1178                  25        7
+## 3      2014 3Q     21994          1246                  36       11
+## 4      2014 4Q     18182          1047                  28        6
+## 5      2015 1Q     18178          1014                  34       10
+## 6      2015 2Q     19812           929                  32        9
+## # ... with 18 more variables: UOF_only &lt;int&gt;, Total_transitions &lt;int&gt;,
+## #   Handgun_drawn_NP &lt;int&gt;, Handgun_pointed &lt;int&gt;,
+## #   Handgun_discharged &lt;int&gt;, Total_handgun &lt;int&gt;, Traser_drawn_NP &lt;int&gt;,
+## #   Taser_pointed &lt;int&gt;, Taser_fired &lt;int&gt;, Total_taser &lt;int&gt;,
+## #   Officer_noInjuries &lt;int&gt;, Officer_minor &lt;int&gt;, Officer_mayor &lt;int&gt;,
+## #   Total_officer &lt;int&gt;, Suspect_noInjuries &lt;int&gt;, Suspect_minor &lt;int&gt;,
+## #   Suspect_major &lt;int&gt;, Total_suspect &lt;int&gt;</code></pre>
+<pre class="r"><code>tail(elgCrime) # looks at the last six columns (with column names)</code></pre>
+<pre><code>## # A tibble: 6 x 23
+##   Year_Quarter Total_CFS Total_arrests Total_RTR_incidents SOF_only
+##          &lt;chr&gt;     &lt;int&gt;         &lt;int&gt;               &lt;int&gt;    &lt;int&gt;
+## 1      2015 3Q     22530          1000                  35       12
+## 2      2015 4Q     20276           889                  55       19
+## 3      2016 1Q     23423          1046                  50       12
+## 4      2016 2Q     24715           962                  52       13
+## 5      2016 3Q     24680           954                  56       14
+## 6      2016 4Q     21822           905                  41       15
+## # ... with 18 more variables: UOF_only &lt;int&gt;, Total_transitions &lt;int&gt;,
+## #   Handgun_drawn_NP &lt;int&gt;, Handgun_pointed &lt;int&gt;,
+## #   Handgun_discharged &lt;int&gt;, Total_handgun &lt;int&gt;, Traser_drawn_NP &lt;int&gt;,
+## #   Taser_pointed &lt;int&gt;, Taser_fired &lt;int&gt;, Total_taser &lt;int&gt;,
+## #   Officer_noInjuries &lt;int&gt;, Officer_minor &lt;int&gt;, Officer_mayor &lt;int&gt;,
+## #   Total_officer &lt;int&gt;, Suspect_noInjuries &lt;int&gt;, Suspect_minor &lt;int&gt;,
+## #   Suspect_major &lt;int&gt;, Total_suspect &lt;int&gt;</code></pre>
+<p>With head and tail, you can also specify the number of rows you want to see</p>
+<pre class="r"><code>head(elgCrime, 10) # looks at first 10 rows</code></pre>
+<pre><code>## # A tibble: 10 x 23
+##    Year_Quarter Total_CFS Total_arrests Total_RTR_incidents SOF_only
+##           &lt;chr&gt;     &lt;int&gt;         &lt;int&gt;               &lt;int&gt;    &lt;int&gt;
+##  1      2014 1Q     19217           989                  32       12
+##  2      2014 2Q     21265          1178                  25        7
+##  3      2014 3Q     21994          1246                  36       11
+##  4      2014 4Q     18182          1047                  28        6
+##  5      2015 1Q     18178          1014                  34       10
+##  6      2015 2Q     19812           929                  32        9
+##  7      2015 3Q     22530          1000                  35       12
+##  8      2015 4Q     20276           889                  55       19
+##  9      2016 1Q     23423          1046                  50       12
+## 10      2016 2Q     24715           962                  52       13
+## # ... with 18 more variables: UOF_only &lt;int&gt;, Total_transitions &lt;int&gt;,
+## #   Handgun_drawn_NP &lt;int&gt;, Handgun_pointed &lt;int&gt;,
+## #   Handgun_discharged &lt;int&gt;, Total_handgun &lt;int&gt;, Traser_drawn_NP &lt;int&gt;,
+## #   Taser_pointed &lt;int&gt;, Taser_fired &lt;int&gt;, Total_taser &lt;int&gt;,
+## #   Officer_noInjuries &lt;int&gt;, Officer_minor &lt;int&gt;, Officer_mayor &lt;int&gt;,
+## #   Total_officer &lt;int&gt;, Suspect_noInjuries &lt;int&gt;, Suspect_minor &lt;int&gt;,
+## #   Suspect_major &lt;int&gt;, Total_suspect &lt;int&gt;</code></pre>
+<pre class="r"><code>tail(elgCrime, 5) # looks at athe last 5 rows</code></pre>
+<pre><code>## # A tibble: 5 x 23
+##   Year_Quarter Total_CFS Total_arrests Total_RTR_incidents SOF_only
+##          &lt;chr&gt;     &lt;int&gt;         &lt;int&gt;               &lt;int&gt;    &lt;int&gt;
+## 1      2015 4Q     20276           889                  55       19
+## 2      2016 1Q     23423          1046                  50       12
+## 3      2016 2Q     24715           962                  52       13
+## 4      2016 3Q     24680           954                  56       14
+## 5      2016 4Q     21822           905                  41       15
+## # ... with 18 more variables: UOF_only &lt;int&gt;, Total_transitions &lt;int&gt;,
+## #   Handgun_drawn_NP &lt;int&gt;, Handgun_pointed &lt;int&gt;,
+## #   Handgun_discharged &lt;int&gt;, Total_handgun &lt;int&gt;, Traser_drawn_NP &lt;int&gt;,
+## #   Taser_pointed &lt;int&gt;, Taser_fired &lt;int&gt;, Total_taser &lt;int&gt;,
+## #   Officer_noInjuries &lt;int&gt;, Officer_minor &lt;int&gt;, Officer_mayor &lt;int&gt;,
+## #   Total_officer &lt;int&gt;, Suspect_noInjuries &lt;int&gt;, Suspect_minor &lt;int&gt;,
+## #   Suspect_major &lt;int&gt;, Total_suspect &lt;int&gt;</code></pre>
+<p>The program that generates these guide files doesn’t show all the columns, but you’ll see them all in your R Studio console window.</p>
+<p>There are other commands but here’s a great way to look at the data</p>
+<pre class="r"><code>summary(elgCrime)</code></pre>
+<pre><code>##  Year_Quarter         Total_CFS     Total_arrests    Total_RTR_incidents
+##  Length:12          Min.   :18178   Min.   : 889.0   Min.   :25.00      
+##  Class :character   1st Qu.:19663   1st Qu.: 947.8   1st Qu.:32.00      
+##  Mode  :character   Median :21544   Median : 994.5   Median :35.50      
+##                     Mean   :21341   Mean   :1013.2   Mean   :39.67      
+##                     3rd Qu.:22753   3rd Qu.:1046.2   3rd Qu.:50.50      
+##                     Max.   :24715   Max.   :1246.0   Max.   :56.00      
+##     SOF_only        UOF_only     Total_transitions Handgun_drawn_NP
+##  Min.   : 6.00   Min.   :15.00   Min.   : 2.000    Min.   :0.000   
+##  1st Qu.: 9.75   1st Qu.:16.00   1st Qu.: 3.000    1st Qu.:1.000   
+##  Median :12.00   Median :19.50   Median : 6.500    Median :3.000   
+##  Mean   :11.67   Mean   :21.92   Mean   : 6.083    Mean   :3.417   
+##  3rd Qu.:13.25   3rd Qu.:25.75   3rd Qu.: 8.000    3rd Qu.:5.250   
+##  Max.   :19.00   Max.   :35.00   Max.   :12.000    Max.   :8.000   
+##  Handgun_pointed  Handgun_discharged Total_handgun   Traser_drawn_NP
+##  Min.   : 2.000   Min.   :0          Min.   : 4.00   Min.   :0.000  
+##  1st Qu.: 3.750   1st Qu.:0          1st Qu.: 7.00   1st Qu.:1.000  
+##  Median : 6.500   Median :0          Median : 9.50   Median :2.000  
+##  Mean   : 6.667   Mean   :0          Mean   :10.08   Mean   :2.083  
+##  3rd Qu.: 9.250   3rd Qu.:0          3rd Qu.:13.50   3rd Qu.:3.000  
+##  Max.   :12.000   Max.   :0          Max.   :18.00   Max.   :6.000  
+##  Taser_pointed     Taser_fired     Total_taser    Officer_noInjuries
+##  Min.   : 2.000   Min.   :1.000   Min.   : 5.00   Min.   :19.00     
+##  1st Qu.: 3.750   1st Qu.:2.750   1st Qu.: 8.00   1st Qu.:26.50     
+##  Median : 6.000   Median :4.500   Median :13.00   Median :32.00     
+##  Mean   : 7.083   Mean   :4.667   Mean   :13.83   Mean   :34.08     
+##  3rd Qu.: 9.250   3rd Qu.:6.500   3rd Qu.:19.50   3rd Qu.:43.75     
+##  Max.   :16.000   Max.   :9.000   Max.   :27.00   Max.   :51.00     
+##  Officer_minor  Officer_mayor    Total_officer   Suspect_noInjuries
+##  Min.   :1.00   Min.   :0.0000   Min.   :1.000   Min.   :18.00     
+##  1st Qu.:3.75   1st Qu.:0.0000   1st Qu.:4.000   1st Qu.:25.00     
+##  Median :5.50   Median :0.0000   Median :6.000   Median :28.50     
+##  Mean   :5.25   Mean   :0.3333   Mean   :5.583   Mean   :32.42     
+##  3rd Qu.:7.00   3rd Qu.:1.0000   3rd Qu.:7.000   3rd Qu.:42.00     
+##  Max.   :8.00   Max.   :1.0000   Max.   :9.000   Max.   :47.00     
+##  Suspect_minor    Suspect_major    Total_suspect  
+##  Min.   : 3.000   Min.   :0.0000   Min.   : 3.00  
+##  1st Qu.: 4.750   1st Qu.:0.0000   1st Qu.: 4.75  
+##  Median : 7.500   Median :0.0000   Median : 7.50  
+##  Mean   : 7.083   Mean   :0.1667   Mean   : 7.25  
+##  3rd Qu.: 8.000   3rd Qu.:0.0000   3rd Qu.: 8.25  
+##  Max.   :14.000   Max.   :1.0000   Max.   :14.00</code></pre>
+<p>Summary is dead useful. For each column (where possible), it automatically gives you the minimum number, the number at the first quartile (25% point), the median and mean, the number at the third quartile (75%) and finally the maximum number.</p>
+<p>For instance, right away we see that Elgin police haven’t fired their guns in the three years the data covers.</p>
+<p>The only drawback is it’s hard to view in the console if you have a lot of columns. There’s a simple way of storing the result of summary into a dataframe viewable by clicking on it in the Environment tab.</p>
+<pre class="r"><code>sumElg &lt;- do.call(cbind, lapply(elgCrime, summary))</code></pre>
+<p>This is one of those “just turn the door knob” moments. You only need to put the name of your dataframe in … lapply(NAME, summary)) … and assign it to a dataframe … sumElg &lt;- …</p>
+<p>Now you can view it whenever you want in an easily scrollable format by clicking on it in the Environment tab.</p>
+</div>
+<div id="grabbing-the-data-we-want" class="section level2">
+<h2>Grabbing the data we want</h2>
+<p>Now that we have a better understanding of everything, let’s grab a slice of the dataset to look at more closely. Let’s focus just on the Response to Resistance data, which includes total RTR incidents or incidents that involved police showing or using physical techniques to respond instead of a weapon like a taser or gun. These are broken down into three parts: Show of force only, Use of force only and then incidents that transitioned from Show to Use of force (total transitions).</p>
+<p>But first, I don’t like that we have the year and the quarter in the same column. I’d like to also have a column with just the year and one with just the quarter. Here’s how we do that:</p>
+<p>Let’s sort the dataframe in ascending order by year/quarter</p>
+<pre class="r"><code>elgCrime[order(elgCrime$Year_Quarter),]</code></pre>
+<pre><code>## # A tibble: 12 x 23
+##    Year_Quarter Total_CFS Total_arrests Total_RTR_incidents SOF_only
+##           &lt;chr&gt;     &lt;int&gt;         &lt;int&gt;               &lt;int&gt;    &lt;int&gt;
+##  1      2014 1Q     19217           989                  32       12
+##  2      2014 2Q     21265          1178                  25        7
+##  3      2014 3Q     21994          1246                  36       11
+##  4      2014 4Q     18182          1047                  28        6
+##  5      2015 1Q     18178          1014                  34       10
+##  6      2015 2Q     19812           929                  32        9
+##  7      2015 3Q     22530          1000                  35       12
+##  8      2015 4Q     20276           889                  55       19
+##  9      2016 1Q     23423          1046                  50       12
+## 10      2016 2Q     24715           962                  52       13
+## 11      2016 3Q     24680           954                  56       14
+## 12      2016 4Q     21822           905                  41       15
+## # ... with 18 more variables: UOF_only &lt;int&gt;, Total_transitions &lt;int&gt;,
+## #   Handgun_drawn_NP &lt;int&gt;, Handgun_pointed &lt;int&gt;,
+## #   Handgun_discharged &lt;int&gt;, Total_handgun &lt;int&gt;, Traser_drawn_NP &lt;int&gt;,
+## #   Taser_pointed &lt;int&gt;, Taser_fired &lt;int&gt;, Total_taser &lt;int&gt;,
+## #   Officer_noInjuries &lt;int&gt;, Officer_minor &lt;int&gt;, Officer_mayor &lt;int&gt;,
+## #   Total_officer &lt;int&gt;, Suspect_noInjuries &lt;int&gt;, Suspect_minor &lt;int&gt;,
+## #   Suspect_major &lt;int&gt;, Total_suspect &lt;int&gt;</code></pre>
+<p>Alternatively, here’s how you would sort decending order elgCrime[order(elgCrime$Year_Quarter, decreasing=TRUE),]</p>
+<p>Next we’re going to grab the first four letters in the year/quarter column and put them in a column called year using the command “substr.”</p>
+<pre class="r"><code>elgCrime$year &lt;- as.numeric(as.character( substr(elgCrime$Year_Quarter, start=1, stop=4) ))</code></pre>
+<p>The command “as.numeric(as.character( …” that wraps around the substr commmand takes those four letters and tells R that we want them considered a number, not a string.</p>
+<p>We don’t have to do that with quarter since it has a mix of letters and numbers (Q1, Q2 etc)</p>
+<pre class="r"><code>elgCrime$quarter &lt;- substr(elgCrime$Year_Quarter, start=6, stop=7)</code></pre>
+<p>If you look at elgCrime now, you’ll see two new columns at the end summary(elgCrime)</p>
+<p>Now let’s grab just the columns we want:</p>
+<pre class="r"><code>dfCrime &lt;- elgCrime[,c(&quot;Year_Quarter&quot;,&quot;year&quot;,&quot;quarter&quot;,&quot;Total_CFS&quot;,&quot;Total_arrests&quot;,&quot;Total_RTR_incidents&quot;,&quot;SOF_only&quot;,&quot;UOF_only&quot;,&quot;Total_transitions&quot;)]</code></pre>
+<p>We take a list of the columns we want in elgCrime and put them into a dataframe called dfCrime.</p>
+<p>Some of the column names are long, and we’ll be working with them so let’s shorten them</p>
+<pre class="r"><code>names(dfCrime)[names(dfCrime)==&quot;Total_RTR_incidents&quot;] &lt;- &quot;Total_RTR&quot;
+names(dfCrime)[names(dfCrime)==&quot;Total_transitions&quot;] &lt;- &quot;Transitions&quot;</code></pre>
+<p>Let’s save it as a csv file as we’ll be using it extensively.</p>
+<pre class="r"><code>write_csv(dfCrime,&quot;dfCrime.csv&quot;)</code></pre>
+<p>We just did a lot. Take a moment and click on dfCrime and elgCrime in the Environnment tab. Compare the two and it should help you understand how we got here.</p>
+</div>
+<div id="first-visualization" class="section level2">
+<h2>First visualization</h2>
+<div id="lets-make-a-histogram" class="section level3">
+<h3>Let’s make a histogram</h3>
+<pre class="r"><code>hist(dfCrime$Total_RTR, breaks=10, main=&quot;Histogram&quot;, col=&quot;green&quot;)</code></pre>
+<p><img src="01_basicHist_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>A histogram may look like a bar chart, but it’s different. A bar chart will show the number of things in a category, like the number of incidents in the first quarter of 2014 versus the number in the second. And we’ll make a bar chart like that in another file.</p>
+<p>A histogram shows how often (frequency) a value appears. In this case, we know we have 12 numbers or values in the Total_RTR column. We also know, from using summary(), that the minimum number out of that 12 is “25” and the maximum is “56.”</p>
+<p>So a histogram counts the number of times a value shows up between 25 and 56. For instance, we can see there four values between 30 and 35 in our dataset.</p>
+<p>Not a big deal with such a small dataset. Very useful when you’re working with a large dataset like campaign contributions.</p>
+<p>Play around with the number of breaks - it’s not always going to change. Histogram automatically rounds the number of breaks to the next best number. 2 will work, 3 gets you four bars, 5 gets you seven bars and so on.</p>
+</div>
+<div id="density" class="section level3">
+<h3>Density</h3>
+<p>A density plot is another kind of histogram, except it has a smooth line.</p>
+<p>First we get the density and put in a variable ‘d.’ (you can call it anything you want)</p>
+<pre class="r"><code>d &lt;- density(dfCrime$Total_RTR) 
+d</code></pre>
+<pre><code>## 
+## Call:
+##  density.default(x = dfCrime$Total_RTR)
+## 
+## Data: dfCrime$Total_RTR (12 obs.);   Bandwidth &#39;bw&#39; = 5.949
+## 
+##        x                y            
+##  Min.   : 7.152   Min.   :7.723e-05  
+##  1st Qu.:23.826   1st Qu.:2.864e-03  
+##  Median :40.500   Median :1.729e-02  
+##  Mean   :40.500   Mean   :1.497e-02  
+##  3rd Qu.:57.174   3rd Qu.:2.164e-02  
+##  Max.   :73.848   Max.   :3.533e-02</code></pre>
+<p>You can see the distribution between Min and Max is different than the one in Summary(). That’s because density is trying to use the data to generate a smooth line.</p>
+<p>Generally, bandwidth shows how much there is at that point. Feel free to google “R density plots bandwidth” to learn more.</p>
+<p>Now let’s use d to plot</p>
+<pre class="r"><code>plot(d, main=&quot;Total RTR incidents&quot;) 
+polygon(d, col=rgb(1, 0, 0, 0.5), border=&quot;red&quot;) </code></pre>
+<p><img src="01_basicHist_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><strong>plot</strong> takes the information in d and generates the density chart. <strong>main</strong> adds a title.</p>
+<p><strong>polygon</strong> formats the plot, making the line red and filling it with red: col=rgb(red,green,blue…</p>
+<p>The last number is the alpha or opacity of the polygon. The value could be from 0 (0% or transparent) to 1 (100%). This is at 0.5, so it’s 50%.</p>
+<p>As to the result, you can see it mirrors the histogram.</p>
+<div id="density-by-year" class="section level4">
+<h4>Density by year</h4>
+<p>That’s all good, but in our data there’s a factor that we can use to group and compare portions of our data: year.</p>
+<p>BTW: remember that word <em>factor</em>. It’s something that will come up a lot when making graphics and maps in R.</p>
+<p>We need to load in the library called “sm.” You may need to install it first.</p>
+<pre class="r"><code>library(sm)</code></pre>
+<pre><code>## Package &#39;sm&#39;, version 2.2-5.4: type help(sm) for summary information</code></pre>
+<p>Now let’s see how many years we have. We know there’s only three in this set.</p>
+<pre class="r"><code>listF &lt;- as.factor(dfCrime$year)
+listF</code></pre>
+<pre><code>##  [1] 2014 2014 2014 2014 2015 2015 2015 2015 2016 2016 2016 2016
+## Levels: 2014 2015 2016</code></pre>
+<p><strong>as.factor</strong> gives us all the groups it finds. We put that in the variable <em>listF</em> in case we want refer to it later.</p>
+<p>Let’s generate the plot and then go through the code:</p>
+<pre class="r"><code>sm.density.compare(dfCrime$Total_RTR, 
+                   dfCrime$year, 
+                   xlab=&quot;Total RTR incidents&quot;, 
+                   ylim= c(0,0.08))
+title(main=&quot;Response to Resistance by year&quot;)
+RTRyears &lt;- factor(dfCrime$year, 
+                   levels= c(&quot;2014&quot;,&quot;2015&quot;,&quot;2016&quot;), 
+                   labels = c(&quot;2014&quot;, &quot;2015&quot;, &quot;2016&quot;)
+                   )
+colfill&lt;-c( 2:( 2+length( levels(RTRyears) ) ) )
+legend( &quot;topright&quot;, 
+        levels(RTRyears), 
+        fill=colfill )</code></pre>
+<p><img src="01_basicHist_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>First, look at the overall way the code is laid out.</p>
+<ul>
+<li><p>This is five lines of code</p></li>
+<li><p>To make it easier to read, we take longer lines and break them up into multiple lines by hitting “return” in places it makes sense to do so, like after a comma. R Studio knows to indent that for us.</p></li>
+<li><p>Each line of code adds something to the plot - that’s something to get used to with R, starting a plot and adding features to it. You could stop with the first line: sm.density.compare… and it would OK. But you wouldn’t have a title or a legend to help you.</p></li>
+</ul>
+<p>Now let’s look at each line of code so you understand how to use it.</p>
+<p><strong>sm.density.compare( </strong> is the command that sets up the plot</p>
+<p><strong>dfCrime$Total_RTR,</strong> is the column in the data we want to use. Needs to be followed by a comma.</p>
+<p><strong>dfCrime$year,</strong> is the <em>factor</em> we want to compare by. It will automatically go in group the rows by the common factors - in this case year. If there are 100 rows for the year 2014 and 35 rows for the year 2015, it will grab those 100 rows and make them a different group from the 35 rows. Don’t forget the comma.</p>
+<p><strong>xlab=“Total RTR incidents”,</strong> this just adds a label for the x axis, the bottom axis of the chart. The y axis is always the vertical axis.</p>
+<p><strong>ylim= c(0,0.08))</strong> This sets the range for the y axis, mostly for aesthetic reasons. We want the plot to be high enough, with empty space on top, so the legend doesn’t run into the lines.</p>
+<p>You can probably figure out what title does.</p>
+<p>The next three lines format and add the legend to the plot. This is the kind of code you don’t necessarily have to know a lot about right now - you can pick it up and modify things as needed.</p>
+<p><strong>RTRyears &lt;- factor(dfCrime$year,</strong> creates a variable <em>RTRyears</em> and adds the years factors to it. <em>levels</em> is a list of the factor levels that we got from <em>listF</em>, and <em>labels</em> is the text that we want to correspond to those levels. Try changing the labels and see what happens.</p>
+<p><strong>colfill&lt;-c( 2:( 2+length( levels(RTRyears) ) ) )</strong> formats the little boxes that go next to the labels.</p>
+<p><strong>legend( “topright”, </strong> places the legend in the plot at the top, right corner. <em>topleft</em> would put it at the top, left corner etc. <em>levels</em> adds the levels we set up in <em>RTRyears</em> and <em>fill</em> adds the boxes we set up in <em>colfill</em>.</p>
+<p>R keeps track of things for us, automatically assigning colors to the legend in the same order as it assigned them to the lines in the plot.</p>
+<p>And what we see here is pretty useful:</p>
+<ul>
+<li><p>2014 had the highest amount of the lowest values.</p></li>
+<li><p>Most of the values in 2015 were pretty close to 2014, but had at least one higher value.</p></li>
+<li><p>2016’s values were all higher than 2014, and higher than all but that one bump in 2016.</p></li>
+</ul>
+<p>Again, we’re working with a small dataset where each year has only 4 values. Imagine if each year had hundreds of values…</p>
+</div>
+</div>
+</div>
+<div id="final-thoughts" class="section level2">
+<h2>Final thoughts</h2>
+<p>This was a long exercise, probably the longest of these guides. Feel free to play around with the data and code - try selecting other portions of the data and make histograms and density charts.</p>
+<p>The more you work with this, the easier it gets.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
