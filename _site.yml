@@ -5,5 +5,5 @@ navbar:
   left:
     - text: "Introduction"
       href: index.html
-    - text: "00_Navigation"
-      href: 00_navigation.html
+    - text: "Navigation"
+      href: Navigation.html

@@ -1,0 +1,49 @@
+---
+title: "Navigation"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Page listing
+
+* [Introduction](index.html)
+
+* Navigation
+
+* [01_basicHist](01_basicHist.html)
+
+* [02_basicDots](02_basicDots.html)
+
+* [03_basicBars](03_basicBars.html)
+
+* [04_basicLines](04_basicLines.html)
+
+* [05_basicPlots1](05_basicPlots1.html)
+
+* [06_basicPlots2](href: 06_basicPlots2.html)
+
+* [07_qplot](07_qplot.html)
+
+* [08_ggplotBars](08_ggplotBars.html)
+
+* [09_ggplotPublication](09_ggplotPublication.html)
+
+* [10_subsetData](10_subsetData.html)
+
+* [11_ggplotStackedBars](11_ggplotStackedBars.html)
+
+* [12_ggplotGroupedBars](12_ggplotGroupedBars.html)
+
+* [13_ggplotLines](13_ggplotLines.html)
+    
+* [14_ggplotArea](14_ggplotArea.html)
+
+* [15_AllTogether](15_AllTogether.html)
