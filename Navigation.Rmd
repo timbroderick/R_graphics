@@ -28,7 +28,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 * [05_basicPlots1](05_basicPlots1.html)
 
-* [06_basicPlots2](href: 06_basicPlots2.html)
+* [06_basicPlots2](06_basicPlots2.html)
 
 * [07_qplot](07_qplot.html)
 
