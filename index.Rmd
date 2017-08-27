@@ -12,12 +12,18 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+All the scripts and data is available at https://github.com/dailyherald/R_graphics
 
-Aside from this document (00_Introduction), this series correspond to R scripts of the same name. 01_basicHist.html describes in detail what you'll see in 01_basicHist.R and so on. This allows us keep the annotations in the R script fairly light and allows you to have this html guide open or printed out while you work with the script.
+
+Aside from this document (00_Introduction), this series correspond to R scripts of the same name, found in the "scripts" folder of the site linked above.  
+
+So, 01_basicHist.html describes in detail what you'll see in 01_basicHist.R and so on. This allows us keep the annotations in the R script fairly light and allows you to have this html guide open or printed out while you work with the script.
 
 The idea is that while you're working with the R scripts, you can have the html file open in a browser window. The html files can be printed too. Use whatever works best for you.
 
 If you need some assistance with these, please let me know. 
+
+Use the [Navigation page](Navigation.html) to begin.
 
 ####Important note
 
