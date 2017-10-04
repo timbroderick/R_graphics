@@ -48,4 +48,4 @@ knitr::opts_chunk$set(echo = TRUE)
 
 * [15_AllTogether](15_AllTogether.html)
 
-* [M01_Beginning Mapping - Data prep](M01_dataprep.html)
+* [M01_Mapping data prep](M01_dataprep.html)

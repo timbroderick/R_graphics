@@ -365,11 +365,17 @@ head(ill@data, n = 10)</code></pre>
 <pre><code>## CRS arguments:
 ##  +proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0</code></pre>
 <p>Yay, NAD1983. You can learn more about that here: <a href="https://en.wikipedia.org/wiki/North_American_Datum" class="uri">https://en.wikipedia.org/wiki/North_American_Datum</a></p>
+</div>
+<div id="first-plot" class="section level3">
+<h3>First plot</h3>
 <p>Let’s see what the map looks like:</p>
 <pre class="r"><code>plot(ill)</code></pre>
 <p><img src="M01_dataprep_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>Success. Complete map of all the counties in Illinois. You should know that this shapefile has been worked a bit by me. It’s been simplified, which means many points were removed from the polygons in order to make the overall filesize smaller. There’s a loss of some exactness, but the tradeoff is that you’re not generating huge files that can’t be opened easily.</p>
 <p>This kind of thing is an acceptable and a compromise used widely.</p>
+</div>
+<div id="joining-data-we-want-to-explore" class="section level3">
+<h3>Joining data we want to explore</h3>
 <p>Now let’s bring in some data we want to use:</p>
 <pre class="r"><code>census16 &lt;- read.csv(&quot;census2016_all.csv&quot;, stringsAsFactors = FALSE)
 head(census16)</code></pre>
@@ -760,6 +766,9 @@ head(census16)</code></pre>
 ## 5          6.81              3.04
 ## 6         13.91             15.76</code></pre>
 <p>Now we have the census data with the geoid attached to each county. There’s a reason we saved the data seperately.</p>
+</div>
+<div id="transforming-the-shapefile" class="section level3">
+<h3>Transforming the shapefile</h3>
 <p>In order to work with ggplot, we need to save the shapefiles in such a way that it works with ggplot. Doing this will remove data unnecessary to understanding the geographies. So we saved it with the geoid so we can rejoin it later.</p>
 <p>To transform the shapefiles for ggplot, we use the fortify command</p>
 <pre class="r"><code>ill_f &lt;- fortify(ill, region=&quot;GEOID10&quot;)
@@ -835,6 +844,7 @@ head(ill_f, n=5)</code></pre>
 ## 4        -0.76        -1.14         15.38             30.46
 ## 5        -0.76        -1.14         15.38             30.46</code></pre>
 <pre class="r"><code>write_csv(ill_f,&quot;ill_f.csv&quot;)</code></pre>
+<p>Next: Mapping with ggplot2 and gradient scales!</p>
 </div>
 </div>
 

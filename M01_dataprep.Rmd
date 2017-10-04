@@ -64,6 +64,8 @@ ill@proj4string
 
 Yay, NAD1983. You can learn more about that here: https://en.wikipedia.org/wiki/North_American_Datum
 
+
+###First plot
 Let's see what the map looks like:
 
 ```{r}
@@ -76,6 +78,7 @@ Success. Complete map of all the counties in Illinois. You should know that this
 
 This kind of thing is an acceptable and a compromise used widely.
 
+###Joining data we want to explore
 Now let's bring in some data we want to use:
 
 ```{r}
@@ -120,6 +123,8 @@ head(census16)
 
 Now we have the census data with the geoid attached to each county. There's a reason we saved the data seperately.
 
+###Transforming the shapefile
+
 In order to work with ggplot, we need to save the shapefiles in such a way that it works with ggplot. Doing this will remove data unnecessary to understanding the geographies. So we saved it with the geoid so we can rejoin it later.
 
 To transform the shapefiles for ggplot, we use the fortify command
@@ -150,5 +155,5 @@ write_csv(ill_f,"ill_f.csv")
 
 ```
 
-
+Next: Mapping with ggplot2 and gradient scales!
 
