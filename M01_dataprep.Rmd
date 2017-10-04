@@ -1,0 +1,154 @@
+---
+title: "M01_dataprep"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Prepping data for mapping
+
+R is OK for exploritory mapping - loading data in and seeing how it looks geographically. There is a better open-source option out there called QGis. If you're interested, let me know and I can point out some good resources.
+
+But fair warning: mapping and data is pretty much a rabbit hole all unto itself. 
+
+###Loading in Libraries and shapefiles
+
+```{r}
+
+library(readr)
+library(ggplot2)
+library(ggthemes)
+library(rgdal)
+library(dplyr)
+library(ggmap)
+
+
+# Loading shapefiles
+
+ill <- readOGR(dsn = "ILcounties/simplified.shp")
+
+```
+
+Libraries you should be familiar with. There are a few new ones we need: rgdal, dplyr and ggmap. 
+
+Shapefiles are a data standard developed by ESRI, one of the premier geographic companies around. They developed Arc Map, which is an expensive mapping program that the free open source QGis seeks to replace. I use both.
+
+The thing about shapefiles is they have geographies and data associated with those geographies. We can access that data but instead of using a $ for a dataframe, we use an @ sign.
+
+```{r}
+
+# divides things into slots geodata in one, data in another etc
+head(ill@data, n = 10)
+summary(ill@data)
+
+```
+
+There's other important information that should be associated with shapefiles. The projection tells all this how to appear when it's plotted.
+
+OK, real quick: The Earth is not flat, it's a sphere. Taking the stuff on a round surface and presenting it in such a way that it makes sense is projection. There are many projections out there - the way Google maps shows you the world is through a projection called Mercator, which some people hate. Feel free to get into online fights about map projections.
+
+The worst thing is if there isn't a projection. Let's see if this data has one:
+
+```{r}
+
+ill@proj4string
+
+```
+
+Yay, NAD1983. You can learn more about that here: https://en.wikipedia.org/wiki/North_American_Datum
+
+Let's see what the map looks like:
+
+```{r}
+
+plot(ill)
+
+```
+
+Success. Complete map of all the counties in Illinois. You should know that this shapefile has been worked a bit by me. It's been simplified, which means many points were removed from the polygons in order to make the overall filesize smaller. There's a loss of some exactness, but the tradeoff is that you're not generating huge files that can't be opened easily.
+
+This kind of thing is an acceptable and a compromise used widely.
+
+Now let's bring in some data we want to use:
+
+```{r}
+
+census16 <- read.csv("census2016_all.csv", stringsAsFactors = FALSE)
+head(census16)
+summary(census16)
+
+```
+
+This is data gleaned from the yearly Census release on population counts. It's by county, so let's see if we can join to our shapefile data using county name. 
+
+```{r}
+
+ill$NAMELSAD10 %in% census16$Place
+
+```
+
+All true. So let's join the census data to the shapefile data.
+
+```{r}
+
+ill@data <- left_join(ill@data, census16, by = c('NAMELSAD10' = 'Place'))
+head(ill@data)
+summary(ill@data)
+names(ill)
+
+```
+
+Let's write the data to a csv and read it back again, then get rid of a few columns we don't need.
+
+```{r}
+
+write_csv(ill@data,"illdata.csv")
+census16 <- read.csv("illdata.csv", stringsAsFactors = FALSE)
+census16$STATEFP10=NULL
+census16$COUNTYFP10=NULL
+census16$COUNTYNS10=NULL
+head(census16)
+
+```
+
+Now we have the census data with the geoid attached to each county. There's a reason we saved the data seperately.
+
+In order to work with ggplot, we need to save the shapefiles in such a way that it works with ggplot. Doing this will remove data unnecessary to understanding the geographies. So we saved it with the geoid so we can rejoin it later.
+
+To transform the shapefiles for ggplot, we use the fortify command
+
+```{r}
+
+ill_f <- fortify(ill, region="GEOID10")
+head(ill_f, n = 5) 
+
+```
+
+Fortify looks like it takes each polygon in a shapefile and changes it to a groupable set of points based on ID.
+Once we have this dataframe, we can rejoin the data associated with it.
+
+To do that, we need to make sure the class of GEOID10 in each file is the same. Then we can join and write the file out as a csv to use.
+
+```{r}
+
+ill_f$id <- as.numeric(as.character(ill_f$id))
+class(ill_f$id)
+class(census16$GEOID10)
+
+ill_f <- left_join(ill_f, census16, by = c('id' = 'GEOID10'))
+
+head(ill_f, n=5)
+
+write_csv(ill_f,"ill_f.csv")
+
+```
+
+
+

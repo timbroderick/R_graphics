@@ -47,3 +47,5 @@ knitr::opts_chunk$set(echo = TRUE)
 * [14_ggplotArea](14_ggplotArea.html)
 
 * [15_AllTogether](15_AllTogether.html)
+
+* [M01_Beginning Mapping - Data prep](M01_dataprep.html)
