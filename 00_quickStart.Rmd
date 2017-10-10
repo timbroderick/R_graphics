@@ -1,0 +1,183 @@
+---
+title: "Quick Start"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This very basic tutorial will walk you through installing R and R studio, show you some simple R code and how to run it. Finally, you'll find out where you can learn more.
+
+## Installing R
+
+To get R, go to https://www.r-project.org/ 
+
+Download the latest version for the computer you're using and install it. Don't worry about pinning R to your taskbar or anything. 
+
+Once that's installed, get the free version of R-studio here https://www.rstudio.com/  You can run R without R-studio. But R-studio is a friendlier interface for R, and most people recommend it.
+
+Be sure to pin R-studio to your task bar or create an alias for it. This is how you'll run your R scripts. But don't run it just yet.
+
+Go to your desktop and create a new folder. You can call it anything you want, but it's where you'll be putting your R work. I call my folder "R-work."
+
+OK, now start R-studio.
+
+##R studio
+
+Once it starts, go to the file menu at the very top and create a new R Script file. 
+
+Ater you do that, you should see four panels in front of you:
+
+![](rstudio.png)
+
+
+Obviously you don't have a spectacular plot and complex code done yet, but this image does describe what you should be seeing. (image from sthda.com via google search. I don't know where they got it.)
+
+**1-Code Editor** This is where you're going to be typing (or copying/pasting) your code. It's where you're R scripts will show up. R scripts don't actually do anything on their own - they're basically text files with the extension ".R" so that your computer knows it's got R code in it.
+
+**2-R Console** This is where the results of your script will show up - except for graphical plots. Those will show up in the plots and files panel. You can type in this panel and run the code you type there.
+
+But here's the key - and very important - difference between the script and the console. You can save scripts and reuse them again. So if you're doing something important, make sure it's in script and saved.
+
+**3-Workspace and history** Generally here's where data that you import shows up. So, say we import a spreadsheet of numbers. It'll show up here as a kind of asset. And each time we import something else, it'll show up here in a list. 
+
+**4-Plots and files** If you generate a bar chart, you'll see the preview here. 
+
+Right now in that 4th panel, you should see a directory of where R studio thinks you are. And it's probably not in the R-work directory. 
+That's a problem, because when you start working with data you need to be able to tell R studio where the data is on your computer. So we need to tell R studio what our *working directory* is. 
+
+##Getting and setting your working directory
+
+You'll have to do this all the time, but it's not a big deal. 
+
+If for some reason you don't see a directory list in the 4th panel, click on the "files" option form the menu that says "Files, Plots, Packages, Help and Viewer."
+
+Now click to the desktop and into your R work folder.
+
+Below that "files" menu, find the word "More" in the submenu list that starts with "New Folder." Click on it and among the options should be "Set as working directory." Select that option.
+
+In your console, you should see something like this:
+
+> setwd("~/Desktop/R-work/R_graphics")
+
+You just ran your first R code. You told R studio where the working directory is. You could have typed "setwd("~/Desktop/R-work/R_graphics")" and it would have done the same thing.
+
+Now, if you wanted to import some data, you can put it in the R-work folder and say "load data.csv" instead of "load ../other folder/another folder/data.csv"
+
+If that looks like a web URL, you're right. That's how all computers work - the web is just a giant directory of folders and files.
+
+Now you can hit "save" on your R script and it'll save it into the R-work folder. Call the file "myFirstRscript". It should show up in the files list in the 4th panel.
+
+##Writing and running R code
+
+Let's start with some simple commands. 
+
+```{r}
+getwd()
+```
+
+Two things: 
+
+1) Whenever you see something in a gray box like the above, that's code you can and should copy and paste or type out into your script file.
+
+2) Never just do that. Always make a note to yourself on what code does. This is how you'll learn and, if you can't remember, find the things you need. That's the great thing about scripts - they're repositories for code. I don't remember everything, and most coders don't either.
+
+So that snippit should look like this:
+
+```{r}
+
+# Code for getting the working directory
+getwd()
+
+```
+
+In a script, if you start a line with a "#" it will tell R that it's a note and to ignore it. Until you're proficient in coding, leave yourself a lot of notes. Future you will thank you if you do.
+
+To run that code, put your cursor anywhere within that line and hit control return ( or control enter if you're on windows ).
+
+You'll see the result in your console window below.
+
+Let's do some more, simple code.
+
+First, let's create a list.
+
+```{r}
+
+# Creates a list and puts it into variable 'x'
+
+x <- c(5,6,7,8,9)
+
+```
+
+Hit control return on that line. You see it show up in the console below. And you should see "x" in the 3rd tab to the right. 
+
+Let's break this down.
+
+**x** is the variable. You could call it anything. 
+
+**<-** is the way to assign things to other things. You can use "=", but for some reason that's frowned upon. Best to stick to one way.
+
+**c(** is what tells R that whatever is between two parenthesis is a list.
+
+**5,6,7,8,9** is the list. And you need to make sure you close the parenthesis.
+
+OK, so we have a list of things. We can access the whole thing by just typing "x" and hitting control return.
+
+```{r}
+# let's see what's saved in the variable "x"
+x
+
+```
+
+You can access just the first number, or the last. And do math.
+
+```{r}
+
+# The first item in the list x
+x[1]
+# The last number in the list x
+x[5]
+# This should add up to 14
+x[1] + x[5]
+
+```
+
+There's other things we can do with that list too, like find the mean or average
+
+```{r}
+# find the mean of something
+mean(x)
+
+```
+
+If you're not sure how something works, you can always ask for help by putting a "?" in front of a function, like this:
+
+```{r}
+# What does mean do?
+
+?mean
+
+```
+
+The help file shows up in the 4th panel to the lower right.
+
+## Learning R
+
+There's more to all this than can be contained in a quick start guide. Here's two resources for you to learn more:
+
+**Swirl** is a set of interactive - free - tutorials that will take you through the basics of learning R and R-studio.  http://swirlstats.com/  To install it, type: `install.packages("swirl")` in the R console. It'll download and install it for you. 
+
+To run swirl, type: `library(swirl)` and that will activate the tutorials.
+
+I also recommend this **Udemy** class: https://www.udemy.com/r-programming/ 
+
+If you've never done a Udemy class, the first time you go to their website and look at a specific class, it'll offer that class to you for a drastically reduced price. This r-programming class was only $10. 
+
+I did both, but if I had to choose I would say the 10$ was well spent on the Udemy class. The Swirl tutorials were kind of clunky.
+

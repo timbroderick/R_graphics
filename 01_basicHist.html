@@ -296,6 +296,8 @@ div.tocify {
 </div>
 
 
+<p>If you’ve come here from the quick start guide, you might be a little lost. From here on, these guides are written assuming that you’ve done some of the swirl tutorials or some of the Udemy class.</p>
+<p>Especially if you have no experience in coding, I urge you to try one or the other. If you need any help, please contact me. There’s a bit of a learning curve <em>at first,</em> but you can power through that and start getting good at R.</p>
 <div id="interview-the-data" class="section level2">
 <h2>Interview the data</h2>
 <p>“Interviewing your data” is a concept introduced through Investigative Reporters and Editors, an organization I highly recommend you look into.</p>
@@ -305,6 +307,7 @@ div.tocify {
 <p><em>Let’s take a moment to point out that - for a reporter - none of this is a replacement for talking with people. Any dataset should simply be one source of information out of many that you use for a story.</em></p>
 <p><em>And you need to be thinking critically about the data like any source. For instance, there’s no geographical data associated in the data. That means we can’t map any of this. It doesn’t necessarily mean someone’s trying to hide anything, but not having something that potentially describes the data in a certain way is like making an entire topic off limits at a press conference.</em></p>
 <p>The first step is to bring your data into R and to do that we’ll need to load in a library.</p>
+<p>Remember, if you don’t have this library, you’ll need to install it first.</p>
 <pre class="r"><code>library(readr)</code></pre>
 <p>In this case the readr package is a bit like using a jackhammer to drive a nail, but it’s a good package to know about.</p>
 <p>Now read in the data using read_csv, storing it in a dataframe called “elgCrime”</p>
@@ -315,6 +318,8 @@ div.tocify {
 ##   Year_Quarter = col_character()
 ## )</code></pre>
 <pre><code>## See spec(...) for full column specifications.</code></pre>
+<p>Remember, you can find all the files needed for this tutorial - including ElginUOF.csv - at <a href="https://github.com/dailyherald/R_graphics" class="uri">https://github.com/dailyherald/R_graphics</a></p>
+<p>Download the whole thing and put it into your R working folder, the same one with the script you’re presumably typing in as you follow along with this tutorial.</p>
 <p>Very quickly, here’s a number of ways you can examine the nature of the dataset</p>
 <pre class="r"><code>ls() # lists all the datasets loaded in your R studio</code></pre>
 <pre><code>## [1] &quot;elgCrime&quot;</code></pre>

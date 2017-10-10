@@ -18,6 +18,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 * Navigation
 
+* [00_quickStart](00_quickStart.html)
+
 * [01_basicHist](01_basicHist.html)
 
 * [02_basicDots](02_basicDots.html)

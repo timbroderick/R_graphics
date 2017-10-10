@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Quick Start</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Making graphics with R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="Navigation.html">Navigation</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Quick Start</h1>
+
+</div>
+
+
+<p>This very basic tutorial will walk you through installing R and R studio, show you some simple R code and how to run it. Finally, you’ll find out where you can learn more.</p>
+<div id="installing-r" class="section level2">
+<h2>Installing R</h2>
+<p>To get R, go to <a href="https://www.r-project.org/" class="uri">https://www.r-project.org/</a></p>
+<p>Download the latest version for the computer you’re using and install it. Don’t worry about pinning R to your taskbar or anything.</p>
+<p>Once that’s installed, get the free version of R-studio here <a href="https://www.rstudio.com/" class="uri">https://www.rstudio.com/</a> You can run R without R-studio. But R-studio is a friendlier interface for R, and most people recommend it.</p>
+<p>Be sure to pin R-studio to your task bar or create an alias for it. This is how you’ll run your R scripts. But don’t run it just yet.</p>
+<p>Go to your desktop and create a new folder. You can call it anything you want, but it’s where you’ll be putting your R work. I call my folder “R-work.”</p>
+<p>OK, now start R-studio.</p>
+</div>
+<div id="r-studio" class="section level2">
+<h2>R studio</h2>
+<p>Once it starts, go to the file menu at the very top and create a new R Script file.</p>
+<p>Ater you do that, you should see four panels in front of you:</p>
+<div class="figure">
+<img src="rstudio.png" />
+
+</div>
+<p>Obviously you don’t have a spectacular plot and complex code done yet, but this image does describe what you should be seeing. (image from sthda.com via google search. I don’t know where they got it.)</p>
+<p><strong>1-Code Editor</strong> This is where you’re going to be typing (or copying/pasting) your code. It’s where you’re R scripts will show up. R scripts don’t actually do anything on their own - they’re basically text files with the extension “.R” so that your computer knows it’s got R code in it.</p>
+<p><strong>2-R Console</strong> This is where the results of your script will show up - except for graphical plots. Those will show up in the plots and files panel. You can type in this panel and run the code you type there.</p>
+<p>But here’s the key - and very important - difference between the script and the console. You can save scripts and reuse them again. So if you’re doing something important, make sure it’s in script and saved.</p>
+<p><strong>3-Workspace and history</strong> Generally here’s where data that you import shows up. So, say we import a spreadsheet of numbers. It’ll show up here as a kind of asset. And each time we import something else, it’ll show up here in a list.</p>
+<p><strong>4-Plots and files</strong> If you generate a bar chart, you’ll see the preview here.</p>
+<p>Right now in that 4th panel, you should see a directory of where R studio thinks you are. And it’s probably not in the R-work directory. That’s a problem, because when you start working with data you need to be able to tell R studio where the data is on your computer. So we need to tell R studio what our <em>working directory</em> is.</p>
+</div>
+<div id="getting-and-setting-your-working-directory" class="section level2">
+<h2>Getting and setting your working directory</h2>
+<p>You’ll have to do this all the time, but it’s not a big deal.</p>
+<p>If for some reason you don’t see a directory list in the 4th panel, click on the “files” option form the menu that says “Files, Plots, Packages, Help and Viewer.”</p>
+<p>Now click to the desktop and into your R work folder.</p>
+<p>Below that “files” menu, find the word “More” in the submenu list that starts with “New Folder.” Click on it and among the options should be “Set as working directory.” Select that option.</p>
+<p>In your console, you should see something like this:</p>
+<blockquote>
+<p>setwd(“~/Desktop/R-work/R_graphics”)</p>
+</blockquote>
+<p>You just ran your first R code. You told R studio where the working directory is. You could have typed “setwd(”~/Desktop/R-work/R_graphics“)” and it would have done the same thing.</p>
+<p>Now, if you wanted to import some data, you can put it in the R-work folder and say “load data.csv” instead of “load ../other folder/another folder/data.csv”</p>
+<p>If that looks like a web URL, you’re right. That’s how all computers work - the web is just a giant directory of folders and files.</p>
+<p>Now you can hit “save” on your R script and it’ll save it into the R-work folder. Call the file “myFirstRscript”. It should show up in the files list in the 4th panel.</p>
+</div>
+<div id="writing-and-running-r-code" class="section level2">
+<h2>Writing and running R code</h2>
+<p>Let’s start with some simple commands.</p>
+<pre class="r"><code>getwd()</code></pre>
+<pre><code>## [1] &quot;/Users/jeff/Desktop/R-work/R_graphics&quot;</code></pre>
+<p>Two things:</p>
+<ol style="list-style-type: decimal">
+<li><p>Whenever you see something in a gray box like the above, that’s code you can and should copy and paste or type out into your script file.</p></li>
+<li><p>Never just do that. Always make a note to yourself on what code does. This is how you’ll learn and, if you can’t remember, find the things you need. That’s the great thing about scripts - they’re repositories for code. I don’t remember everything, and most coders don’t either.</p></li>
+</ol>
+<p>So that snippit should look like this:</p>
+<pre class="r"><code># Code for getting the working directory
+getwd()</code></pre>
+<pre><code>## [1] &quot;/Users/jeff/Desktop/R-work/R_graphics&quot;</code></pre>
+<p>In a script, if you start a line with a “#” it will tell R that it’s a note and to ignore it. Until you’re proficient in coding, leave yourself a lot of notes. Future you will thank you if you do.</p>
+<p>To run that code, put your cursor anywhere within that line and hit control return ( or control enter if you’re on windows ).</p>
+<p>You’ll see the result in your console window below.</p>
+<p>Let’s do some more, simple code.</p>
+<p>First, let’s create a list.</p>
+<pre class="r"><code># Creates a list and puts it into variable &#39;x&#39;
+
+x &lt;- c(5,6,7,8,9)</code></pre>
+<p>Hit control return on that line. You see it show up in the console below. And you should see “x” in the 3rd tab to the right.</p>
+<p>Let’s break this down.</p>
+<p><strong>x</strong> is the variable. You could call it anything.</p>
+<p><strong>&lt;-</strong> is the way to assign things to other things. You can use “=”, but for some reason that’s frowned upon. Best to stick to one way.</p>
+<p><strong>c(</strong> is what tells R that whatever is between two parenthesis is a list.</p>
+<p><strong>5,6,7,8,9</strong> is the list. And you need to make sure you close the parenthesis.</p>
+<p>OK, so we have a list of things. We can access the whole thing by just typing “x” and hitting control return.</p>
+<pre class="r"><code># let&#39;s see what&#39;s saved in the variable &quot;x&quot;
+x</code></pre>
+<pre><code>## [1] 5 6 7 8 9</code></pre>
+<p>You can access just the first number, or the last. And do math.</p>
+<pre class="r"><code># The first item in the list x
+x[1]</code></pre>
+<pre><code>## [1] 5</code></pre>
+<pre class="r"><code># The last number in the list x
+x[5]</code></pre>
+<pre><code>## [1] 9</code></pre>
+<pre class="r"><code># This should add up to 14
+x[1] + x[5]</code></pre>
+<pre><code>## [1] 14</code></pre>
+<p>There’s other things we can do with that list too, like find the mean or average</p>
+<pre class="r"><code># find the mean of something
+mean(x)</code></pre>
+<pre><code>## [1] 7</code></pre>
+<p>If you’re not sure how something works, you can always ask for help by putting a “?” in front of a function, like this:</p>
+<pre class="r"><code># What does mean do?
+
+?mean</code></pre>
+<p>The help file shows up in the 4th panel to the lower right.</p>
+</div>
+<div id="learning-r" class="section level2">
+<h2>Learning R</h2>
+<p>There’s more to all this than can be contained in a quick start guide. Here’s two resources for you to learn more:</p>
+<p><strong>Swirl</strong> is a set of interactive - free - tutorials that will take you through the basics of learning R and R-studio. <a href="http://swirlstats.com/" class="uri">http://swirlstats.com/</a> To install it, type: <code>install.packages(&quot;swirl&quot;)</code> in the R console. It’ll download and install it for you.</p>
+<p>To run swirl, type: <code>library(swirl)</code> and that will activate the tutorials.</p>
+<p>I also recommend this <strong>Udemy</strong> class: <a href="https://www.udemy.com/r-programming/" class="uri">https://www.udemy.com/r-programming/</a></p>
+<p>If you’ve never done a Udemy class, the first time you go to their website and look at a specific class, it’ll offer that class to you for a drastically reduced price. This r-programming class was only $10.</p>
+<p>I did both, but if I had to choose I would say the 10$ was well spent on the Udemy class. The Swirl tutorials were kind of clunky.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

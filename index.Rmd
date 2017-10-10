@@ -12,7 +12,9 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-All the scripts and data is available at https://github.com/dailyherald/R_graphics
+All the scripts and data for this series is available at https://github.com/dailyherald/R_graphics
+
+You'll need some of the csv files there to do the later tutorials.
 
 
 Aside from this document (00_Introduction), this series correspond to R scripts of the same name, found in the "scripts" folder of the site linked above.  
@@ -97,7 +99,7 @@ Swirl is a set of interactive - free - tutorials that will take you through the 
 
 To run swirl, type: `library(swirl)` and that will activate the tutorials.
 
-I'm also going through this Udemy class: https://www.udemy.com/r-programming/ I find it to be a nice compliment to the swirl tutorials.
+I also did this Udemy class: https://www.udemy.com/r-programming/ I find it to be a nice compliment to the swirl tutorials. 
 
 If you've never done a Udemy class, the first time you go to their website and look at a specific class, it'll offer that class to you for a drastically reduced price. This r-programming class was only $10. 
 

@@ -12,6 +12,10 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+If you've come here from the quick start guide, you might be a little lost. From here on, these guides are written assuming that you've done some of the swirl tutorials or some of the Udemy class. 
+
+Especially if you have no experience in coding, I urge you to try one or the other. If you need any help, please contact me. There's a bit of a learning curve *at first,* but you can power through that and start getting good at R.
+
 ##Interview the data
 "Interviewing your data" is a concept introduced through Investigative Reporters and Editors, an organization I highly recommend you look into.
 
@@ -28,6 +32,8 @@ _And you need to be thinking critically about the data like any source. For inst
 
 The first step is to bring your data into R and to do that we'll need to load in a library. 
 
+Remember, if you don't have this library, you'll need to install it first.
+
 ```{r}
 library(readr)
 ```
@@ -35,9 +41,14 @@ library(readr)
 In this case the readr package is a bit like using a jackhammer to drive a nail, but it's a good package to know about.
 
 Now read in the data using read_csv, storing it in a dataframe called "elgCrime"
+
 ```{r}
 elgCrime <- read_csv("ElginUOF.csv")
 ```
+
+Remember, you can find all the files needed for this tutorial - including ElginUOF.csv - at https://github.com/dailyherald/R_graphics
+
+Download the whole thing and put it into your R working folder, the same one with the script you're presumably typing in as you follow along with this tutorial.
 
 Very quickly, here's a number of ways you can examine the nature of the dataset
 

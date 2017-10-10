@@ -32,7 +32,11 @@ These professionals need to visualize their data for themselves, and then genera
 
 Let's take a look at our data using qplot. There's a good introduction here: http://www.statmethods.net/advgraphs/ggplot2.html
 
-First, let's load in the libraries and data.
+To use these ggplot2 and all the stuff that comes with it, you'll need to install the "tidyverse." Totally not kidding. 
+
+Run install.packages("tidyverse")
+
+Next, let's load in the libraries and data.
 
 ```{r}
 library(readr)
