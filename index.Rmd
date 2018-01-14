@@ -55,7 +55,9 @@ And sometimes, it's really complicated. All these files were created using R ver
 
 ##How these guides are structured
 
-These guides assume you've installed R and R Studio, and have done some of the first Swirl tutorials. Say, the tutorials up until "functions."
+These guides assume you've installed R and R Studio, and have a little experience working with R.
+
+* 00_Quickstart is just that - it'll get you up and running with R and give you some familarity working with it through R-Studio. 
 
 * From 01 to 06, we look at R's basic plotting tools. For exploring data yourself, or just for practice, these are good to know. However, their design isn't great for print or online. And, it takes some work to get a decent graphic out of them. 
 
@@ -65,9 +67,9 @@ These guides assume you've installed R and R Studio, and have done some of the f
 
 * 15 demonstrates how to explore relationships between data using qplot scatter plots and finally creating a publication-ready scatter plot that shows what we found.
 
-* From 16 on, we'll show how to do some less used graphic types like box plots and heat maps.
+* Finally, M01 is a link to another guide I created on how we examined cyclist and pedestrian crashes in the six-county area. It's four parts, with the last two on how we used mapping in R to examine the data.
 
-* Finally, M01 and on looks at R's ability to do maps - specifically choropleth maps. 
+I may add more tutorials at a later date - for instance looking at what happens if something goes wrong. 
 
 ##Links and resources
 
@@ -103,6 +105,9 @@ I also did this Udemy class: https://www.udemy.com/r-programming/ I find it to b
 
 If you've never done a Udemy class, the first time you go to their website and look at a specific class, it'll offer that class to you for a drastically reduced price. This r-programming class was only $10. 
 
+Here's a terrific book on R and data science written by one of the most respected people in the R community: http://r4ds.had.co.nz/
+If you went through this book, you'll come out the other side ready to tackle anything.
+
 #### Other resources - graphics
 
 Find annotated scripts in folder R Graphics that start with basic plotting in R and progress through to plots using ggplot2. The point with these is to produce various chart types suitable for print or online - and for online, specifically viewable on mobile devices.
@@ -119,9 +124,6 @@ https://cran.r-project.org/web/packages/fivethirtyeight/vignettes/fivethirtyeigh
 
 And here's the R scripts and datasets they examined
 https://github.com/rudeboybert/fivethirtyeight/tree/master/data-raw
-
-Here's the book on data science and R, with one of the authors being the person who created the visualization library ggplo2
-http://r4ds.had.co.nz/
 
 Here's a free book on advanced R:
 http://adv-r.had.co.nz/
