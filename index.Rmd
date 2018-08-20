@@ -12,7 +12,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-All the scripts and data for this series is available at https://github.com/dailyherald/R_graphics
+All the scripts and data for this series is available at https://github.com/timbroderick/R_graphics
 
 You'll need some of the csv files there to do the later tutorials.
 
