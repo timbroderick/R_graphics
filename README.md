@@ -6,7 +6,7 @@ In this folder are step-by-step tutorials for learning to do graphics in R. Thes
 
 These guides assume you've installed R and R Studio, and have done some of the first Swirl tutorials. If you haven't, skip down to the "Learning R" section of this readme file to find links and advice on getting up and running.
 
-The html files are numbered and - especially the later ones - build on things you learn from previous files. You can view them as a website here: https://dailyherald.github.io/R_graphics/
+The html files are numbered and - especially the later ones - build on things you learn from previous files. You can view them as a website here: https://timbroderick.github.io/R_graphics/
 
 They're not yet all done, but here's what will be included:
 
